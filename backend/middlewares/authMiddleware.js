@@ -1,6 +1,6 @@
 // middlewares/authMiddleware.js
 const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const config = require('../config/db');
 
 const verifyToken = (req, res, next) => {
   const token = req.headers['authorization'];

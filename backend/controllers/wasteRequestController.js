@@ -37,7 +37,7 @@ const markAsPickedUp = async (req, res) => {
 // New function to fetch all waste requests for admin (e.g., to display on a map)
 const getAllWasteRequests = async (req, res) => {
   try {
-    const wasteRequests = await wasteRequestService.getAllWasteRequests(); // You'll need to implement this in the service
+    const wasteRequests = await wasteRequestService.getAllWasteRequests(); 
     res.json(wasteRequests);
   } catch (error) {
     res.status(400).json({ message: error.message });

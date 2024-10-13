@@ -2,7 +2,7 @@
 const userService = require('../services/userService');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const config = require('../config/db');
 
 const register = async (req, res) => {
   try {
