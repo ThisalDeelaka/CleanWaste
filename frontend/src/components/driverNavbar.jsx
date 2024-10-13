@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext"; // Assuming you have an AuthContext
+import { useDriverAuth } from "../context/driverAuthContext"; // Importing the useAuth context
 
-const GcNavbar = () => {
+const DNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { auth, logout } = useAuth(); // Accessing auth and logout from AuthContext
+  const { auth, logout } = useDriverAuth(); // Accessing auth (user and token) and logout from AuthContext
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -13,8 +13,8 @@ const GcNavbar = () => {
   };
 
   const handleLogout = () => {
-    logout();
-    navigate("/"); // Redirect to the home page after logout
+    logout(); // Logout the user
+    navigate("/"); // Redirect to home page
   };
 
   return (
@@ -23,45 +23,39 @@ const GcNavbar = () => {
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/driver-home" className="text-2xl font-bold text-white">
-              GC ClearWaste
+            <Link to="/" className="text-2xl font-bold text-white">
+              ClearWaste
             </Link>
           </div>
 
-          {/* Links for larger screens */}
+          {/* Links (hidden on mobile, visible on large screens) */}
           <div className="hidden md:flex space-x-4">
             <Link
-              to="/GcHome"
+              to="/"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
               Home
             </Link>
             <Link
-              to="/pickup-requests"
+              to="/about"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
-              Pickup Requests
+              About
             </Link>
             <Link
-              to="/qr-waste-code-entry"
+              to="/services"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
-              QR/Waste Code Entry
+              Services
             </Link>
             <Link
-              to="/route-completion"
+              to="/contact"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
-              Route Completion
-            </Link>
-            <Link
-              to="/recycling-center"
-              className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
-            >
-              Recycling Center
+              Contact
             </Link>
 
-            {/* Logout Button */}
+            {/* Conditionally show Login/Sign Up or Logout based on auth.user */}
             {auth?.user ? (
               <button
                 onClick={handleLogout}
@@ -70,16 +64,24 @@ const GcNavbar = () => {
                 Logout
               </button>
             ) : (
-              <Link
-                to="/login"
-                className="px-3 py-2 bg-yellow-400 rounded-md text-sm font-medium text-[#0c343d] hover:bg-yellow-300 transition-all duration-200"
-              >
-                Login
-              </Link>
+              <>
+                <Link
+                  to="/driverLogin"
+                  className="px-3 py-2 bg-yellow-400 rounded-md text-sm font-medium text-[#0c343d] hover:bg-yellow-300 transition-all duration-200"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/driverSignup"
+                  className="px-3 py-2 bg-transparent border border-yellow-400 rounded-md text-sm font-medium hover:bg-yellow-400 hover:text-[#0c343d] transition-all duration-200"
+                >
+                  Sign Up
+                </Link>
+              </>
             )}
           </div>
 
-          {/* Hamburger menu for mobile view */}
+          {/* Hamburger Icon for mobile */}
           <div className="md:hidden">
             <button onClick={toggleMenu} className="text-white">
               {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -87,65 +89,67 @@ const GcNavbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu (Visible only when the menu is open) */}
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link
-                to="/GcHome"
+                to="/"
                 onClick={toggleMenu}
                 className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
               >
                 Home
               </Link>
               <Link
-                to="/pickup-requests"
+                to="/about"
                 onClick={toggleMenu}
                 className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
               >
-                Pickup Requests
+                About
               </Link>
               <Link
-                to="/qr-waste-code-entry"
+                to="/services"
                 onClick={toggleMenu}
                 className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
               >
-                QR/Waste Code Entry
+                Services
               </Link>
               <Link
-                to="/route-completion"
+                to="/contact"
                 onClick={toggleMenu}
                 className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
               >
-                Route Completion
-              </Link>
-              <Link
-                to="/recycling-center"
-                onClick={toggleMenu}
-                className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
-              >
-                Recycling Center
+                Contact
               </Link>
 
-              {/* Logout for mobile */}
+              {/* Conditionally show Login/Sign Up or Logout */}
               {auth?.user ? (
                 <button
                   onClick={() => {
                     toggleMenu();
                     handleLogout();
                   }}
-                  className="px-3 py-2 bg-red-500 rounded-md text-sm font-medium hover:bg-red-600 transition-all duration-200"
+                  className="px-3 py-2 bg-[#ffe599] rounded-md text-sm font-medium hover:bg-yellow-300 transition-all duration-200"
                 >
                   Logout
                 </button>
               ) : (
-                <Link
-                  to="/login"
-                  onClick={toggleMenu}
-                  className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
-                >
-                  Login
-                </Link>
+                <>
+                  <Link
+                    to="/driverLogin"
+                    onClick={toggleMenu}
+                    className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
+                  >
+                    Driver Login
+                  </Link>
+                  <Link
+                    to="/driverSignup"
+                    onClick={toggleMenu}
+                    className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
+                  >
+                    Driver Sign Up
+                  </Link>
+                </>
               )}
             </div>
           </div>
@@ -155,4 +159,4 @@ const GcNavbar = () => {
   );
 };
 
-export default GcNavbar;
+export default DNavbar;
