@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import cleanWasteAPI from '../api/cleanWasteAPI';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Import icons for Show/Hide Password
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 
@@ -10,6 +11,7 @@ const UserLogin = () => {
     email: '',
     password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);  // State for toggling password visibility
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -23,6 +25,13 @@ const UserLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (!formData.email || !formData.password) {
+      alert('Please fill out both email and password.');
+      return;
+    }
+
     try {
       const response = await cleanWasteAPI.post('/users/login', formData);
       login(response.data.user, response.data.token);
@@ -31,6 +40,10 @@ const UserLogin = () => {
       console.error('Login failed', error);
       alert('Invalid email or password. Please try again.');
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);  // Toggle password visibility
   };
 
   return (
@@ -47,15 +60,24 @@ const UserLogin = () => {
             name="email"
             className="w-full border border-gray-300 p-2 rounded-md"
           />
-          <InputField
-            label="Password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            name="password"
-            className="w-full border border-gray-300 p-2 rounded-md"
-          />
+          <div className="relative">
+            <InputField
+              label="Password"
+              type={showPassword ? "text" : "password"}  // Toggle input type based on state
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              name="password"
+              className="w-full border border-gray-300 p-2 rounded-md"
+            />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 top-10 text-gray-500"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}  {/* Toggle icon based on state */}
+            </button>
+          </div>
           <div className="flex justify-between items-center">
             <Button
               text="Login"
@@ -65,7 +87,7 @@ const UserLogin = () => {
           </div>
         </form>
         <div className="text-center mt-4 text-gray-500">
-          <p>Don't have an account? <a href="/register" className="text-[#175E5E] hover:underline">Sign up</a></p>
+          <p>Don't have an account? <Link to="/register" className="text-[#175E5E] hover:underline">Sign up</Link></p>
         </div>
       </div>
     </div>
