@@ -2,7 +2,7 @@ import React from "react";
 import DriverNavbar from "../../components/GcNavbar";
 import Footer from "../../components/Footer";
 
-const GcrHomePage = () => {
+const CollectorHomePage = () => {
   return (
     <div>
       {/* Navbar */}
@@ -15,8 +15,7 @@ const GcrHomePage = () => {
             Welcome, <span className="text-yellow-400">Driver</span>
           </h1>
           <p className="text-2xl mt-4 leading-relaxed">
-            Manage your routes, confirm pickups, and help keep the environment
-            clean.
+            Manage your routes, confirm pickups, and help keep the environment clean.
           </p>
 
           {/* Call to Action Buttons */}
@@ -31,11 +30,11 @@ const GcrHomePage = () => {
         </div>
 
         {/* Features Section */}
-        <div className="bg-white py-12 px-8 w-full sm:w-3/4 lg:w-1/2 shadow-xl rounded-lg mt-16 text-gray-800">
+        <div className="flex flex-col items-center justify-center bg-white py-12 px-8 w-full sm:w-3/4 lg:w-1/2 shadow-xl rounded-lg mt-16 text-gray-800">
           <h2 className="text-4xl font-bold text-center text-[#175E5E] mb-8">
             Your Tools
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-center">
             <div className="flex items-start">
               <span className="mr-3 text-[#175E5E]">✔</span>
               View optimized collection routes and schedules.
@@ -62,4 +61,4 @@ const GcrHomePage = () => {
   );
 };
 
-export default GcrHomePage;
+export default CollectorHomePage;
