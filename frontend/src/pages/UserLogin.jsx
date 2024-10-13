@@ -35,7 +35,7 @@ const UserLogin = () => {
     try {
       const response = await cleanWasteAPI.post('/users/login', formData);
       login(response.data.user, response.data.token);
-      navigate('/dashboard');
+      navigate('/');
     } catch (error) {
       console.error('Login failed', error);
       alert('Invalid email or password. Please try again.');
