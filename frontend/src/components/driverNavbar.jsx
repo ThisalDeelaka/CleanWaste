@@ -14,7 +14,7 @@ const DNavbar = () => {
 
   const handleLogout = () => {
     logout(); // Logout the user
-    navigate("/"); // Redirect to home page
+    navigate("/driverHomePage"); // Redirect to driver home page after logout
   };
 
   return (
@@ -58,7 +58,7 @@ const DNavbar = () => {
             {/* Conditionally show Login/Sign Up or Logout based on auth.user */}
             {auth?.user ? (
               <button
-                onClick={handleLogout}
+                onClick={handleLogout} // Call handleLogout when logout is clicked
                 className="px-3 py-2 bg-red-500 rounded-md text-sm font-medium hover:bg-red-600 transition-all duration-200"
               >
                 Logout
@@ -127,7 +127,7 @@ const DNavbar = () => {
                 <button
                   onClick={() => {
                     toggleMenu();
-                    handleLogout();
+                    handleLogout(); // Logout and navigate to driverHomePage
                   }}
                   className="px-3 py-2 bg-[#ffe599] rounded-md text-sm font-medium hover:bg-yellow-300 transition-all duration-200"
                 >
