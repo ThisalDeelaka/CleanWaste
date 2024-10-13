@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import cleanWasteAPI from '../api/cleanWasteAPI';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 
@@ -10,8 +11,9 @@ const UserRegister = () => {
     email: '',
     password: '',
     address: '',
-    streetSide: '', // Updated for dropdown selection
+    streetSide: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -24,13 +26,25 @@ const UserRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.streetSide) {
+      alert('Please fill out all fields.');
+      return;
+    }
+
     try {
       const response = await cleanWasteAPI.post('/users/register', formData);
       console.log('User registered:', response.data);
       navigate('/login');
     } catch (error) {
       console.error('Error registering user', error);
+      alert('Registration failed. Please try again.');
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -55,15 +69,24 @@ const UserRegister = () => {
             name="email"
             className="w-full border border-gray-300 p-2 rounded-md"
           />
-          <InputField
-            label="Password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            name="password"
-            className="w-full border border-gray-300 p-2 rounded-md"
-          />
+          <div className="relative">
+            <InputField
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              name="password"
+              className="w-full border border-gray-300 p-2 rounded-md"
+            />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 top-10 text-gray-500"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
           <InputField
             label="Address (Street Name)"
             value={formData.address}
@@ -72,7 +95,7 @@ const UserRegister = () => {
             name="address"
             className="w-full border border-gray-300 p-2 rounded-md"
           />
-          {/* Dropdown for Street Side */}
+          {/* Updated Dropdown for Street Side with Tailwind CSS */}
           <div className="w-full">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="streetSide">
               Street Side
@@ -81,7 +104,7 @@ const UserRegister = () => {
               name="streetSide"
               value={formData.streetSide}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded-md"
+              className="w-full border border-gray-300 p-2 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">Select Street Side</option>
               <option value="Left">Left</option>
@@ -95,7 +118,7 @@ const UserRegister = () => {
           />
         </form>
         <div className="text-center mt-4 text-gray-500">
-          <p>Already have an account? <a href="/login" className="text-[#175E5E] hover:underline">Login</a></p>
+          <p>Already have an account? <Link to="/login" className="text-[#175E5E] hover:underline">Login</Link></p>
         </div>
       </div>
     </div>
