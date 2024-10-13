@@ -1,19 +1,16 @@
+// routes/wasteRequestRoutes.js
 const express = require('express');
-const {
-  createWasteTypeController,
-  getWasteGuidelinesController,
-  getAllWasteTypesController  // Import the new controller
-} = require('../controllers/wasteController');  // Import waste controller functions
-
 const router = express.Router();
+const wasteRequestController = require('../controllers/wasteRequestController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// Route to create a new waste type
-router.post('/create', createWasteTypeController);
+// Create a waste request (user-specific)
+router.post('/create', authMiddleware.verifyToken, wasteRequestController.createWasteRequest);
 
-// Route to get sorting guidelines for a waste type
-router.get('/guidelines/:type', getWasteGuidelinesController);
+// Assign driver to a waste request (admin-specific)
+router.post('/assign-driver', authMiddleware.verifyToken, authMiddleware.isAdmin, wasteRequestController.assignDriver);
 
-// Route to get all waste types
-router.get('/waste-types', getAllWasteTypesController);  // New route for fetching all waste types
+// Mark waste as picked up (driver-specific)
+router.post('/mark-picked-up', authMiddleware.verifyToken, authMiddleware.isDriver, wasteRequestController.markAsPickedUp);
 
 module.exports = router;

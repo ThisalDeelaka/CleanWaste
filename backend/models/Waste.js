@@ -1,17 +1,20 @@
+// models/WasteRequest.js
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const wasteSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    required: true // Organic, Plastic, Hazardous, etc.
+const wasteRequestSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  wasteType: { type: String, enum: ['Organic', 'Recyclable', 'Hazardous', 'E-waste', 'Plastic'], required: true },
+  status: { type: String, enum: ['pending', 'assigned', 'picked-up'], default: 'pending' },
+  wasteCode: { type: String, required: true, unique: true },
+  qrCode: { type: String, unique: true },
+  location: {
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
+    address: { type: String, required: true }
   },
-  guidelines: {
-    type: [String],  // Array of sorting instructions
-    required: true
-  }
-}, {
-  timestamps: true
-});
+  assignedDriver: { type: Schema.Types.ObjectId, ref: 'User' },
+  pickupDate: { type: Date }
+}, { timestamps: true });
 
-const Waste = mongoose.model('Waste', wasteSchema);
-module.exports = Waste;
+module.exports = mongoose.model('WasteRequest', wasteRequestSchema);

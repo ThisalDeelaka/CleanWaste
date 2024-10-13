@@ -1,35 +1,20 @@
+// services/adminService.js
 const User = require('../models/User');
-const Driver = require('../models/Driver');
+const bcrypt = require('bcrypt');
 
-// Assign a pickup schedule to a user
-const assignUserPickupSchedule = async (userId, schedule) => {
-  const user = await User.findById(userId);
-  
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  user.pickupSchedule = schedule;
-  await user.save();
-  
-  return user;
-};
-
-// Assign a route to a driver
-const assignRouteToDriver = async (driverId, pickupId) => {
-  const driver = await Driver.findById(driverId);
-  
-  if (!driver) {
-    throw new Error('Driver not found');
-  }
-
-  driver.assignedRoutes.push(pickupId);
+const registerDriver = async (driverData) => {
+  const hashedPassword = await bcrypt.hash(driverData.password, 10);
+  const driver = new User({
+    name: driverData.name,
+    email: driverData.email,
+    password: hashedPassword,
+    role: 'driver',  // Automatically set the role to "driver"
+    address: driverData.address
+  });
   await driver.save();
-
   return driver;
 };
 
 module.exports = {
-  assignUserPickupSchedule,
-  assignRouteToDriver
+  registerDriver
 };

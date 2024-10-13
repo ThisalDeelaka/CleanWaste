@@ -1,23 +1,10 @@
-const express = require("express");
-const {
-  loginDriverController,
-  signupDriverController,
-  getDriverRoutesController,
-  completePickupForDriver,
-} = require("../controllers/driverController");
-
+// routes/driverRoutes.js
+const express = require('express');
 const router = express.Router();
+const driverController = require('../controllers/driverController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// Driver signup
-router.post("/signup", signupDriverController); // Route for signup
-
-// Driver login
-router.post("/login", loginDriverController); // Route for login
-
-// Get assigned routes
-router.get("/routes", getDriverRoutesController);
-
-// Complete a pickup
-router.post("/complete-pickup", completePickupForDriver);
+// Get assigned pickups for a driver (driver-specific)
+router.get('/assigned-pickups', authMiddleware.verifyToken, authMiddleware.isDriver, driverController.getAssignedPickups);
 
 module.exports = router;

@@ -1,19 +1,10 @@
+// routes/adminRoutes.js
 const express = require('express');
-const {
-  loginAdminController,
-  assignPickupScheduleController,
-  assignDriverRouteController
-} = require('../controllers/adminController');  // Import admin controller functions
-
 const router = express.Router();
+const wasteRequestController = require('../controllers/wasteRequestController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// Admin login
-router.post('/login', loginAdminController);
-
-// Assign pickup schedule to a user (requires admin authentication)
-router.post('/assign-pickup-schedule', assignPickupScheduleController);
-
-// Assign a route to a driver (requires admin authentication)
-router.post('/assign-driver-route', assignDriverRouteController);
+// Admin view all waste requests on the map
+router.get('/all-waste-requests', authMiddleware.verifyToken, authMiddleware.isAdmin, wasteRequestController.getAllWasteRequests);
 
 module.exports = router;

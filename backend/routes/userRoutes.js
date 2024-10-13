@@ -1,23 +1,16 @@
+// routes/userRoutes.js
 const express = require('express');
-const {
-  registerUserController,
-  loginUserController,
-  confirmPickupForUser,
-  getAlternativeSlotsForUser
-} = require('../controllers/userController');  // Import user controller functions
-
 const router = express.Router();
+const userController = require('../controllers/userController');
+const authMiddleware = require('../middlewares/authMiddleware');  // Middleware for authentication
 
-// Register a new user
-router.post('/register', registerUserController);
+// User registration
+router.post('/register', userController.register);
 
-// Login a user
-router.post('/login', loginUserController);
+// User login
+router.post('/login', userController.login);
 
-// Confirm a pickup request (requires authentication middleware)
-router.post('/pickup/confirm', confirmPickupForUser);
-
-// Get alternative pickup time slots (requires authentication middleware)
-router.get('/pickup/alternative-slots', getAlternativeSlotsForUser);
+// Get user profile (requires authentication)
+router.get('/profile', authMiddleware.verifyToken, userController.getUserProfile);
 
 module.exports = router;
