@@ -24,7 +24,19 @@ const getWasteGuidelinesController = async (req, res) => {
   }
 };
 
+// Get all waste types
+const getAllWasteTypesController = async (req, res) => {
+  try {
+    const wastes = await Waste.find().select('type'); // Only return waste types
+    const wasteTypes = wastes.map(waste => waste.type); // Extract the types into an array
+    res.json(wasteTypes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createWasteTypeController,
-  getWasteGuidelinesController
+  getWasteGuidelinesController,
+  getAllWasteTypesController
 };

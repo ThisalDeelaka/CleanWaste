@@ -14,7 +14,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();  // Logout the user
-    navigate('/');  // Redirect to home page
+    navigate('/driverHomePage');  // Redirect to home page
   };
 
   return (
