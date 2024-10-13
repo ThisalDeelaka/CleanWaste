@@ -1,8 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 const HomePage = () => {
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+
+  // Function to handle navigation when 'Get Started' is clicked
+  const handleGetStartedClick = () => {
+    navigate('/selection'); // Navigate to '/selection' when clicked
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
@@ -20,7 +28,10 @@ const HomePage = () => {
 
           {/* Call to Action Buttons */}
           <div className="mt-8 flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-6 justify-center">
-            <button className="px-8 py-4 bg-yellow-400 text-[#175E5E] font-semibold rounded-lg shadow-lg hover:bg-yellow-300 hover:shadow-xl transition-all duration-300">
+            <button
+              className="px-8 py-4 bg-yellow-400 text-[#175E5E] font-semibold rounded-lg shadow-lg hover:bg-yellow-300 hover:shadow-xl transition-all duration-300"
+              onClick={handleGetStartedClick} // Navigate to '/selection' when clicked
+            >
               Get Started
             </button>
             <button className="px-8 py-4 bg-transparent text-white border border-white font-semibold rounded-lg hover:bg-white hover:text-[#175E5E] transition-all duration-300">

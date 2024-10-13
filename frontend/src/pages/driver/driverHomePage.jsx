@@ -1,12 +1,12 @@
 import React from "react";
-import DriverNavbar from "../../components/GcNavbar";
+import DNavbar from "../../components/driverNavbar";
 import Footer from "../../components/Footer";
 
-const CollectorHomePage = () => {
+const DriverHome = () => {
   return (
     <div>
       {/* Navbar */}
-      <DriverNavbar />
+      <DNavbar />
 
       {/* Hero Section */}
       <main className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#175E5E] to-[#134c4c] text-white">
@@ -15,7 +15,8 @@ const CollectorHomePage = () => {
             Welcome, <span className="text-yellow-400">Driver</span>
           </h1>
           <p className="text-2xl mt-4 leading-relaxed">
-            Manage your routes, confirm pickups, and help keep the environment clean.
+            Manage your routes, confirm pickups, and help keep the environment
+            clean.
           </p>
 
           {/* Call to Action Buttons */}
@@ -61,4 +62,4 @@ const CollectorHomePage = () => {
   );
 };
 
-export default CollectorHomePage;
+export default DriverHome;

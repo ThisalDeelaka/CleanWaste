@@ -6,8 +6,8 @@ const wasteSchema = new mongoose.Schema({
     required: true // Organic, Plastic, Hazardous, etc.
   },
   guidelines: {
-    type: String,
-    required: true // Sorting instructions
+    type: [String],  // Array of sorting instructions
+    required: true
   }
 }, {
   timestamps: true
