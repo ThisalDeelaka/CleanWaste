@@ -12,10 +12,10 @@ const UserLogin = () => {
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);  // State for toggling password visibility
-
-  const { login } = useAuth();
+  const { login } = useAuth();  // Using the login function from AuthContext
   const navigate = useNavigate();
 
+  // Function to handle input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -23,6 +23,7 @@ const UserLogin = () => {
     });
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,8 +34,13 @@ const UserLogin = () => {
     }
 
     try {
+      // Send login request to the API
       const response = await cleanWasteAPI.post('/users/login', formData);
+
+      // If successful, store the user and token in AuthContext
       login(response.data.user, response.data.token);
+      
+      // Navigate to home page after successful login
       navigate('/');
     } catch (error) {
       console.error('Login failed', error);
@@ -42,15 +48,18 @@ const UserLogin = () => {
     }
   };
 
+  // Toggle password visibility
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);  // Toggle password visibility
+    setShowPassword(!showPassword);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#175E5E]">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md mx-4">
         <h1 className="text-3xl font-bold text-center text-[#175E5E] mb-6">Clean Waste Login</h1>
+        
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Email Input */}
           <InputField
             label="Email"
             type="email"
@@ -60,6 +69,8 @@ const UserLogin = () => {
             name="email"
             className="w-full border border-gray-300 p-2 rounded-md"
           />
+          
+          {/* Password Input */}
           <div className="relative">
             <InputField
               label="Password"
@@ -78,14 +89,16 @@ const UserLogin = () => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}  {/* Toggle icon based on state */}
             </button>
           </div>
-          <div className="flex justify-between items-center">
-            <Button
-              text="Login"
-              type="submit"
-              className="bg-[#175E5E] text-white w-full py-2 rounded-md font-semibold hover:bg-[#134c4c] transition duration-200"
-            />
-          </div>
+          
+          {/* Login Button */}
+          <Button
+            text="Login"
+            type="submit"
+            className="bg-[#175E5E] text-white w-full py-2 rounded-md font-semibold hover:bg-[#134c4c] transition duration-200"
+          />
         </form>
+        
+        {/* Signup Link */}
         <div className="text-center mt-4 text-gray-500">
           <p>Don't have an account? <Link to="/register" className="text-[#175E5E] hover:underline">Sign up</Link></p>
         </div>
