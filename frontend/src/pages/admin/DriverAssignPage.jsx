@@ -44,7 +44,7 @@ const DriverAssignPage = () => {
   
     try {
       // API call to assign the driver
-      const response = await cleanWasteAPI.post('/assign-pickup', {
+      const response = await cleanWasteAPI.post('/drivers/assign-pickup', {
         driverId: selectedDriver,
         street: selectedStreet,
         pickupDate: pickupDate
