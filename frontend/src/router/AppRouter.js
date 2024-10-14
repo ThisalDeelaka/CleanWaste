@@ -3,7 +3,7 @@ import UserRegister from "../pages/UserRegister";
 import UserLogin from "../pages/UserLogin";
 import HomePage from "../pages/user/HomePage";
 
-import DriverHome from "../pages/driver/driverHomePage";
+import DriverHomePage from "../pages/driver/driverHomePage";
 
 import WasteTypeSelection from "../pages/user/WasteTypeSelection";
 import SortingGuidelines from "../pages/user/SortingGuidelines";
@@ -40,14 +40,13 @@ const AppRouter = () => (
       <Route path="/Membership" element={<Membership />} />
       <Route path="/recycling" element={<Recycling />} />
       <Route path="/confirmation" element={<WasteRequestConfirmation />} />
-     
 
       {/* driver routes */}
 
       <Route path="/BulkWaste" element={<BulkWaste />} />
       {/* driver routes */}
 
-      <Route path="/driverHomePage" element={<DriverHome />} />
+      <Route path="/driverHomePage" element={<DriverHomePage />} />
       {/* admin routes */}
       <Route path="/AdminHomePage" element={<AdminHomePage />} />
       <Route path="/AddPlaceForm" element={<AddPlaceForm />} />

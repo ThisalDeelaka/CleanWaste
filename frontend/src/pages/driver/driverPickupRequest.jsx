@@ -179,8 +179,8 @@ const PickupRequests = () => {
                         Waste Type: {request.wasteType.join(", ")}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Pickup Date:{" "}
-                        {new Date(request.pickupDate).toLocaleDateString()}
+                        Requested Date:{" "}
+                        {new Date(request.createdAt).toLocaleDateString()}
                       </p>
                       <p
                         className={`text-sm font-semibold ${
