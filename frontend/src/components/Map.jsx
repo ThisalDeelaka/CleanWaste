@@ -13,8 +13,7 @@ const defaultCenter = {
   lng: 80.7718,
 };
 
-const Map = ({ onLocationSelect, wasteRequests = [] }) => {
-  const [markerPosition, setMarkerPosition] = useState(defaultCenter); // Marker position for user location
+const Map = ({ wasteRequests, onRequestSelect }) => {
   const [center, setCenter] = useState(defaultCenter); // Map center position
 
   // Load Google Maps API
@@ -29,30 +28,13 @@ const Map = ({ onLocationSelect, wasteRequests = [] }) => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setCenter({ lat: latitude, lng: longitude });
-          setMarkerPosition({ lat: latitude, lng: longitude });
-          if (onLocationSelect) {
-            onLocationSelect({ latitude, longitude }); // Only call if the function exists
-          }
         },
         (error) => {
-          console.error('Error getting location: ', error);
+          console.error("Error getting location: ", error);
         }
       );
     }
-  }, [onLocationSelect]);
-
-  // Handle map click to update marker position
-  const onMapClick = useCallback(
-    (event) => {
-      const lat = event.latLng.lat();
-      const lng = event.latLng.lng();
-      setMarkerPosition({ lat, lng });
-      if (onLocationSelect) {
-        onLocationSelect({ latitude: lat, longitude: lng }); // Only call if the function exists
-      }
-    },
-    [onLocationSelect]
-  );
+  }, []);
 
   if (!isLoaded) {
     return <div>Loading Map...</div>;
@@ -63,19 +45,13 @@ const Map = ({ onLocationSelect, wasteRequests = [] }) => {
       mapContainerStyle={containerStyle}
       center={center}
       zoom={12} // Zoom level when showing user's location
-      onClick={onMapClick} // Update marker on map click
     >
-      {markerPosition && <Marker position={markerPosition} />}
-
-      {/* Display markers for waste requests */}
-      {wasteRequests.map((request) => (
+      {/* Display markers for all waste requests */}
+      {wasteRequests.map((request, index) => (
         <Marker
-          key={request._id}
-          position={{
-            lat: request.location.latitude,
-            lng: request.location.longitude,
-          }}
-          onClick={() => onLocationSelect && onLocationSelect(request.location)} // Only call if function exists
+          key={index}
+          position={{ lat: request.location.latitude, lng: request.location.longitude }}
+          onClick={() => onRequestSelect(request)} // Select request on marker click
         />
       ))}
     </GoogleMap>

@@ -5,6 +5,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import Map from '../../components/Map'; 
 import Button from '../../components/Button';
+import AdminNav from '../../components/AdminNav';
 
 const AdminHomePage = () => {
   const [wasteRequests, setWasteRequests] = useState([]); // All waste requests
@@ -18,8 +19,9 @@ const AdminHomePage = () => {
   useEffect(() => {
     const fetchWasteRequests = async () => {
       try {
-        const response = await cleanWasteAPI.get('/api/waste-requests/all-waste-requests'); // Fetch all waste requests
+        const response = await cleanWasteAPI.get('/waste-requests/all-waste-requests'); // Fetch all waste requests
         setWasteRequests(response.data);
+        console.log('Waste requests:', response.data);
       } catch (error) {
         console.error('Error fetching waste requests:', error);
       }
@@ -69,8 +71,7 @@ const AdminHomePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <Navbar />
-
+      <AdminNav />
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-6 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#175E5E] mb-8 text-center">
           Admin Dashboard
@@ -80,7 +81,9 @@ const AdminHomePage = () => {
         <Map
           wasteRequests={wasteRequests} // Pass waste requests to map
           onRequestSelect={handleWasteRequestSelect} // Function to set the selected request
+
         />
+
 
         {/* Waste request details */}
         {selectedRequest && (

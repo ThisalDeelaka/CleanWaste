@@ -10,6 +10,7 @@ router.post('/create', authMiddleware.verifyToken, wasteRequestController.create
 // Assign driver to a waste request (admin-specific)
 router.post('/assign-driver', authMiddleware.verifyToken, authMiddleware.isAdmin, wasteRequestController.assignDriver);
 
+router.get('/all-waste-requests', authMiddleware.verifyToken, wasteRequestController.getAllWasteRequests);
 // Mark waste as picked up (driver-specific)
 router.post('/mark-picked-up', authMiddleware.verifyToken, authMiddleware.isDriver, wasteRequestController.markAsPickedUp);
 

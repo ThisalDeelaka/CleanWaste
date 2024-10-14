@@ -12,6 +12,9 @@ import ProfilePage from '../pages/user/profile/ProfilePage';
 import Membership from '../pages/user/profile/Membership';
 import Recycling from '../pages/user/profile/Recycling';
 import AdminHomePage from '../pages/admin/AdminHomePage';
+import DriverAssignPage from "../pages/admin/DriverAssignPage";
+import UserNotification from "../pages/user/UserNotification";
+import DriverNotification from "../pages/driver/DriverNotification";
 
 // import Dashboard from '../pages/Dashboard';
 
@@ -33,6 +36,12 @@ const AppRouter = () => (
       <Route path="/driverHomePage" element={<DriverHome />} />
         {/* admin routes */}
       <Route path="/AdminHomePage" element={<AdminHomePage />} />
+
+      <Route path="/driverAssign" element={<DriverAssignPage />} />
+      {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+      <Route path="/notifications" element={<UserNotification />} />
+      <Route path="/driverNotifications" element={<DriverNotification />} />
+
     </Routes>
   </Router>
 );
