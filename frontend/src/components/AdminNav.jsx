@@ -43,10 +43,10 @@ const AdminNav = () => {
               driver assign
             </Link>
             <Link
-              to="/services"
+              to="/AddPlaceForm"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
-              Services
+              Place Management 
             </Link>
             <Link
               to="/contact"

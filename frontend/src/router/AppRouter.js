@@ -20,6 +20,8 @@ import PickupRequests from "../pages/driver/driverPickupRequest";
 import BulkWaste from "../pages/user/BulkWaste";
 import CommunityPage from "../pages/community/CommunityPage";
 import CreateEvent from "../pages/community/CreateEvent";
+import AddPlaceForm from "../pages/admin/AddPlaceForm";
+import PlaceList from "../pages/admin/PlaceList";
 
 // import Dashboard from '../pages/Dashboard';
 
@@ -38,6 +40,7 @@ const AppRouter = () => (
       <Route path="/Membership" element={<Membership />} />
       <Route path="/recycling" element={<Recycling />} />
       <Route path="/confirmation" element={<WasteRequestConfirmation />} />
+     
 
       {/* driver routes */}
 
@@ -47,7 +50,8 @@ const AppRouter = () => (
       <Route path="/driverHomePage" element={<DriverHome />} />
       {/* admin routes */}
       <Route path="/AdminHomePage" element={<AdminHomePage />} />
-
+      <Route path="/AddPlaceForm" element={<AddPlaceForm />} />
+      <Route path="/PlaceList" element={<PlaceList />} />
       <Route path="/driverAssign" element={<DriverAssignPage />} />
 
       <Route path="/notifications" element={<UserNotification />} />
