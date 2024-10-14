@@ -70,7 +70,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Links (hidden on mobile, visible on large screens) */}
+          {/* Desktop Links */}
           <div className="hidden md:flex space-x-4 items-center">
             <Link
               to="/"
@@ -176,8 +176,50 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Hamburger Icon for mobile */}
-          <div className="md:hidden">
+          {/* Hamburger and Notification Icon for Mobile */}
+          <div className="md:hidden flex items-center">
+            {/* Notification Bell Icon for Mobile */}
+            <div className="relative mr-4">
+              <button
+                onClick={toggleNotifications}
+                className="relative text-white hover:text-yellow-400"
+              >
+                <FaBell size={24} />
+                {notifications.length > 0 && (
+                  <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+              {/* Notification Dropdown for Mobile */}
+              {showNotifications && (
+                <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg overflow-hidden z-50">
+                  <div className="p-4">
+                    <h2 className="font-bold text-lg mb-2">Notifications</h2>
+                    <ul className="list-none">
+                      {notifications.length > 0 ? (
+                        notifications.map((notification, index) => (
+                          <li key={index} className="mb-2 text-gray-700">
+                            <span>{notification.message}</span>
+                            <br />
+                            <span className="text-sm text-gray-500">
+                              {getTaskInfoForNotification(notification.taskId)}
+                            </span>
+                            <br />
+                            <span className="text-sm text-gray-500">
+                              {new Date(notification.date).toLocaleDateString()}
+                            </span>
+                          </li>
+                        ))
+                      ) : (
+                        <li>No notifications available.</li>
+                      )}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button onClick={toggleMenu} className="text-white">
               {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
