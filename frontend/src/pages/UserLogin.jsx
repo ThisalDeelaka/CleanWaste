@@ -24,10 +24,18 @@ const UserLogin = () => {
     }
 
     try {
-      // Correct API path: /api/users/login
+      // Make API call to login
       const response = await cleanWasteAPI.post("/users/login", formData);
-      login(response.data.user, response.data.token); // Store user and token
-      navigate("/"); // Redirect to home after login
+
+      // Log response data to ensure it contains user and token
+      console.log("Login Response:", response.data);
+
+      if (response.data.user && response.data.token) {
+        login(response.data.user, response.data.token); // Store user and token in context
+        navigate("/"); // Redirect to home after login
+      } else {
+        alert("Invalid login response. Please try again.");
+      }
     } catch (error) {
       console.error("Login failed", error);
       alert("Invalid email or password. Please try again.");

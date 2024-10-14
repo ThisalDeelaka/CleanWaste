@@ -24,27 +24,30 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
-    }
-
     const user = await userService.findUserByEmail(email);
+
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Ensure the secret is passed correctly to jwt.sign()
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       config.jwtSecret,
       { expiresIn: "1h" }
     );
-    res.json({ message: "Login successful", token });
+
+    // Return both the user and token in the response
+    res.json({
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      token: token,
+    });
   } catch (error) {
-    console.error("Error in login:", error);
     res.status(400).json({ message: error.message });
   }
 };
