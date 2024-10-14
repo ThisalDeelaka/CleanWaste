@@ -44,10 +44,10 @@ const Navbar = () => {
               About
             </Link>
             <Link
-              to="/services"
+              to="/BulkWaste"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
-              Services
+              Bulk Waste
             </Link>
             <Link
               to="/contact"
@@ -129,11 +129,11 @@ const Navbar = () => {
                 About
               </Link>
               <Link
-                to="/services"
+                to="/BulkWaste"
                 onClick={toggleMenu}
                 className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
               >
-                Services
+                BulkWaste
               </Link>
               <Link
                 to="/contact"
