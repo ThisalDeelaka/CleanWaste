@@ -83,10 +83,13 @@ const PickupRequests = () => {
     }
 
     try {
-      const response = await cleanWasteAPI.post(`/drivers/mark-picked-up`, {
-        requestId,
-        wasteId: wasteIdInput,
-      });
+      const response = await cleanWasteAPI.post(
+        `/waste-requests/mark-picked-up`,
+        {
+          requestId,
+          wasteId: wasteIdInput,
+        }
+      );
 
       if (response.status === 200) {
         alert("Pickup confirmed successfully!");
