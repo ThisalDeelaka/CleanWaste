@@ -1,20 +1,18 @@
-// controllers/userController.js
-const userService = require("../services/userService");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const config = require("../config/db");
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { registerUser, findUserByEmail, findUserById, findUsersByRole } from '../services/userService.js';
+import { jwtSecret } from '../config/db.js';
 
-const register = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const { name, email, password, role, address } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user (or driver depending on role)
-    const user = await userService.registerUser({
+    const user = await registerUser({
       name,
       email,
       password: hashedPassword,
-      role, // Role will be either 'user' or 'driver'
+      role,
       address,
     });
 
@@ -24,10 +22,10 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await userService.findUserByEmail(email);
+    const user = await findUserByEmail(email);
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -35,11 +33,10 @@ const login = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id, role: user.role },
-      config.jwtSecret,
+      jwtSecret,
       { expiresIn: "4h" }
     );
 
-    // Return both the user and token in the response
     res.json({
       message: "Login successful",
       user: {
@@ -55,30 +52,21 @@ const login = async (req, res) => {
   }
 };
 
-const getUserProfile = async (req, res) => {
+export const getUserProfile = async (req, res) => {
   try {
-    const userId = req.user.userId; // Extracted from JWT
-    const user = await userService.findUserById(userId);
+    const userId = req.user.userId;
+    const user = await findUserById(userId);
     res.json(user);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-// controllers/userController.js
-
-const getAllDrivers = async (req, res) => {
+export const getAllDrivers = async (req, res) => {
   try {
-    const drivers = await userService.findUsersByRole("driver");
+    const drivers = await findUsersByRole("driver");
     res.json(drivers);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-
-module.exports = {
-  register,
-  login,
-  getUserProfile,
-  getAllDrivers,
 };

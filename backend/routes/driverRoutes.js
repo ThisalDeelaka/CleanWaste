@@ -1,38 +1,39 @@
-// routes/driverRoutes.js
-const express = require("express");
+import express from 'express';
+import { getAssignedPickups, getWasteRequestsByAssignedStreet, assignPickupToDriver, completeTask } from '../controllers/driverController.js';
+import { verifyToken, isDriver, isAdmin } from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
-const driverController = require("../controllers/driverController");
-const authMiddleware = require("../middlewares/authMiddleware");
 
 // Get assigned pickups for a driver (driver-specific)
 router.get(
   "/assigned-pickups",
-  authMiddleware.verifyToken,
-  authMiddleware.isDriver,
-  driverController.getAssignedPickups
+  verifyToken,
+  isDriver,
+  getAssignedPickups
 );
 
 // Get waste requests for a street assigned to the driver
 router.get(
   "/pickup-requests",
-  authMiddleware.verifyToken,
-  authMiddleware.isDriver,
-  driverController.getWasteRequestsByAssignedStreet
+  verifyToken,
+  isDriver,
+  getWasteRequestsByAssignedStreet
 );
 
 // Assign a pickup task to a driver (admin only)
 router.post(
   "/assign-pickup",
-  authMiddleware.verifyToken,
-  authMiddleware.isAdmin,
-  driverController.assignPickupToDriver
+  verifyToken,
+  isAdmin,
+  assignPickupToDriver
 );
 
+// Complete a task
 router.post(
   "/complete-task",
-  authMiddleware.verifyToken,
-  authMiddleware.isDriver,
-  driverController.completeTask
+  verifyToken,
+  isDriver,
+  completeTask
 );
 
-module.exports = router;
+export default router;

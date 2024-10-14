@@ -1,40 +1,40 @@
-// routes/wasteRequestRoutes.js
-const express = require("express");
+import express from 'express';
+import { createWasteRequest, assignDriver, getAllWasteRequests, markAsPickedUp, getUserWasteRequests } from '../controllers/wasteRequestController.js';
+import { verifyToken, isAdmin, isDriver } from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
-const wasteRequestController = require("../controllers/wasteRequestController");
-const authMiddleware = require("../middlewares/authMiddleware");
 
 // Create a waste request (user-specific)
 router.post(
   "/create",
-  authMiddleware.verifyToken,
-  wasteRequestController.createWasteRequest
+  verifyToken,
+  createWasteRequest
 );
 
 // Assign driver to a waste request (admin-specific)
 router.post(
   "/assign-driver",
-  authMiddleware.verifyToken,
-  authMiddleware.isAdmin,
-  wasteRequestController.assignDriver
+  verifyToken,
+  isAdmin,
+  assignDriver
 );
 
 // Get all waste requests (user-specific)
 router.get(
   "/all-waste-requests",
-  authMiddleware.verifyToken,
-  wasteRequestController.getAllWasteRequests
+  verifyToken,
+  getAllWasteRequests
 );
 
 // Mark waste as picked up (driver-specific)
 router.post(
   "/mark-picked-up",
-  authMiddleware.verifyToken,
-  authMiddleware.isDriver,
-  wasteRequestController.markAsPickedUp // Ensure this is the correct controller method
+  verifyToken,
+  isDriver,
+  markAsPickedUp
 );
 
 // Get waste requests for a specific user
-router.get("/user/:userId", wasteRequestController.getUserWasteRequests);
+router.get("/user/:userId", getUserWasteRequests);
 
-module.exports = router;
+export default router;

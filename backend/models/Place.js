@@ -1,5 +1,4 @@
-// models/Place.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const placeSchema = new mongoose.Schema({
   streetName: {
@@ -25,6 +24,6 @@ const placeSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Place', placeSchema);
+export default mongoose.model('Place', placeSchema);

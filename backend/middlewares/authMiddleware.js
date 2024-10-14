@@ -1,42 +1,33 @@
-const jwt = require('jsonwebtoken');
-const { jwtSecret } = require('../config/db');  // Ensure jwtSecret is imported correctly
+import jwt from 'jsonwebtoken';
+import { jwtSecret } from '../config/db.js';
 
-const verifyToken = (req, res, next) => {
-  // Extract the token from the Authorization header, usually in the format "Bearer <token>"
+export const verifyToken = (req, res, next) => {
   const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
   
   if (!token) {
     return res.status(403).json({ message: 'No token provided.' });
   }
 
-  // Verify the token using the secret key
   jwt.verify(token, jwtSecret, (err, decoded) => {
     if (err) {
       return res.status(500).json({ message: 'Failed to authenticate token.' });
     }
 
-    // Attach the decoded token (user info) to the request object
     req.user = decoded;
-    next();  // Proceed to the next middleware or route handler
+    next();
   });
 };
 
-const isAdmin = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Admin access required.' });
   }
-  next();  // User is admin, proceed to the next middleware or route handler
+  next();
 };
 
-const isDriver = (req, res, next) => {
+export const isDriver = (req, res, next) => {
   if (req.user.role !== 'driver') {
     return res.status(403).json({ message: 'Driver access required.' });
   }
-  next();  // User is driver, proceed to the next middleware or route handler
-};
-
-module.exports = {
-  verifyToken,
-  isAdmin,
-  isDriver
+  next();
 };

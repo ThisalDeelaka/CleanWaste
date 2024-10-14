@@ -1,19 +1,12 @@
-// routes/userRoutes.js
-const express = require('express');
+import express from 'express';
+import { register, login, getUserProfile, getAllDrivers } from '../controllers/userController.js';
+import { verifyToken, isAdmin } from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
-const userController = require('../controllers/userController');
-const authMiddleware = require('../middlewares/authMiddleware');
 
-// User registration
-router.post('/register', userController.register);
+router.post('/register', register);
+router.post('/login', login);
+router.get('/profile', verifyToken, getUserProfile);
+router.get('/drivers', verifyToken, isAdmin, getAllDrivers);
 
-// User login
-router.post('/login', userController.login);
-
-// Get user profile (requires authentication)
-router.get('/profile', authMiddleware.verifyToken, userController.getUserProfile);
-
-// Get all drivers (admin only)
-router.get('/drivers', authMiddleware.verifyToken, authMiddleware.isAdmin, userController.getAllDrivers);
-
-module.exports = router;
+export default router;

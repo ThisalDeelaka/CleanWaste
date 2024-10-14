@@ -1,5 +1,5 @@
-// models/Notification.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const notificationSchema = new Schema({
@@ -9,4 +9,4 @@ const notificationSchema = new Schema({
   date: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Notification', notificationSchema);
+export default mongoose.model('Notification', notificationSchema);

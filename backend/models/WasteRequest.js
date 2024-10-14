@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const wasteRequestSchema = new Schema(
@@ -19,7 +20,6 @@ const wasteRequestSchema = new Schema(
         required: true,
       },
     ],
-
     status: {
       type: String,
       enum: ["pending", "assigned", "picked-up"],
@@ -38,4 +38,4 @@ const wasteRequestSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("WasteRequest", wasteRequestSchema);
+export default mongoose.model("WasteRequest", wasteRequestSchema);

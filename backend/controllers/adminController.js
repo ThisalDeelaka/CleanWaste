@@ -1,16 +1,11 @@
-// controllers/adminController.js
-const adminService = require('../services/adminService');
+import { registerDriver as registerDriverService } from '../services/adminService.js';
 
-const registerDriver = async (req, res) => {
+export const registerDriver = async (req, res) => {
   try {
     const { name, email, password, address } = req.body;
-    const driver = await adminService.registerDriver({ name, email, password, address });
+    const driver = await registerDriverService({ name, email, password, address });
     res.status(201).json({ message: 'Driver registered successfully', driver });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
-};
-
-module.exports = {
-  registerDriver
 };

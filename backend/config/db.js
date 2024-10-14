@@ -1,11 +1,15 @@
-// config/db.js
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 // Load environment variables
-dotenv.config();
+// If NODE_ENV is 'test', load .env.test, otherwise load .env (development)
+if (process.env.NODE_ENV === 'test') {
+  dotenv.config({ path: '.env.test' });
+} else {
+  dotenv.config({ path: '.env' });
+}
 
-const connectDB = async () => {
+export const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
@@ -18,8 +22,4 @@ const connectDB = async () => {
   }
 };
 
-// Export both connectDB and jwtSecret
-module.exports = {
-  connectDB,
-  jwtSecret: process.env.JWT_SECRET, // Export the JWT secret
-};
+export const jwtSecret = process.env.JWT_SECRET;

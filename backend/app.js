@@ -1,33 +1,26 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors"); // Import the cors package
-const { connectDB } = require("./config/db"); // Import the database connection
-const app = express();
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import { connectDB } from './config/db.js';
+
+import userRoutes from './routes/userRoutes.js';
+import wasteRequestRoutes from './routes/wasteRequestRoutes.js';
+import driverRoutes from './routes/driverRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import placeRoutes from './routes/placeRoutes.js';
 
 dotenv.config();
 
-// Connect to MongoDB (Singleton pattern)
+const app = express();
 connectDB();
 
-// Middleware for CORS
-app.use(cors()); // Add CORS middleware
-
-// Middleware for parsing JSON requests
+app.use(cors());
 app.use(express.json());
 
-// Import routes
-const userRoutes = require("./routes/userRoutes");
-const wasteRequestRoutes = require("./routes/wasteRequestRoutes");
-const driverRoutes = require("./routes/driverRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const placeRoutes = require("./routes/placeRoutes");
-
-// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/waste-requests", wasteRequestRoutes);
 app.use("/api/drivers", driverRoutes);
 app.use("/api/admin", adminRoutes);
 app.use('/api', placeRoutes);
 
-// Remove the listen function from here
-module.exports = app;
+export default app;

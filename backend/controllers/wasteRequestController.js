@@ -1,7 +1,5 @@
-// controllers/wasteRequestController.js
-
-const wasteRequestService = require("../services/wasteRequestService");
-const qrcode = require("qrcode"); // Import QR code library
+import { createWasteRequest as createWasteRequestService, assignDriverToWasteRequest, markWasteAsPickedUp as markWasteAsPickedUpService, getAllWasteRequests as getAllWasteRequestsService, getWasteRequestsByUserId } from '../services/wasteRequestService.js';
+import qrcode from 'qrcode'; // Import QR code library
 
 // Helper function to generate a unique waste code
 const generateWasteCode = () => {
@@ -10,21 +8,20 @@ const generateWasteCode = () => {
   return `WASTE-${randomString}-${timestamp}`;
 };
 
-const createWasteRequest = async (req, res) => {
+export const createWasteRequest = async (req, res) => {
   try {
     const { wasteType, location, userId } = req.body;
 
     if (!location || !location.latitude || !location.longitude) {
       return res.status(400).json({
-        message:
-          "Location is required and must include latitude and longitude.",
+        message: "Location is required and must include latitude and longitude.",
       });
     }
 
     const wasteCode = generateWasteCode(); // Generate a unique waste code
 
     // Create waste request without QR code first
-    let wasteRequest = await wasteRequestService.createWasteRequest({
+    let wasteRequest = await createWasteRequestService({
       wasteType,
       location,
       user: userId,
@@ -46,85 +43,41 @@ const createWasteRequest = async (req, res) => {
   }
 };
 
-const assignDriver = async (req, res) => {
+export const assignDriver = async (req, res) => {
   try {
     const { requestId, driverId } = req.body;
-    const updatedRequest = await wasteRequestService.assignDriverToWasteRequest(
-      requestId,
-      driverId
-    );
+    const updatedRequest = await assignDriverToWasteRequest(requestId, driverId);
     res.json(updatedRequest);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-const markAsPickedUp = async (req, res) => {
+export const markAsPickedUp = async (req, res) => {
   try {
     const { requestId } = req.body;
-    const updatedRequest = await wasteRequestService.markWasteAsPickedUp(
-      requestId
-    );
+    const updatedRequest = await markWasteAsPickedUpService(requestId);
     res.json(updatedRequest);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-const getUserWasteRequests = async (req, res) => {
+export const getUserWasteRequests = async (req, res) => {
   try {
-    const { userId } = req.params; // Get userId from route parameters
-    const wasteRequests = await wasteRequestService.getWasteRequestsByUserId(
-      userId
-    ); // Call the service to get user-specific waste requests
-    res.json(wasteRequests); // Send response with the waste requests
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-const getAllWasteRequests = async (req, res) => {
-  try {
-    const wasteRequests = await wasteRequestService.getAllWasteRequests();
+    const { userId } = req.params;
+    const wasteRequests = await getWasteRequestsByUserId(userId);
     res.json(wasteRequests);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-// controllers/wasteRequestController.js
-
-const markWasteAsPickedUp = async (req, res) => {
+export const getAllWasteRequests = async (req, res) => {
   try {
-    const { requestId, wasteId } = req.body;
-
-    // Find the waste request
-    const wasteRequest = await WasteRequest.findById(requestId);
-
-    if (!wasteRequest) {
-      return res.status(404).json({ message: "Waste request not found" });
-    }
-
-    // Check if the waste ID matches the waste request (if applicable)
-    if (wasteRequest.wasteCode !== wasteId) {
-      return res.status(400).json({ message: "Invalid Waste ID" });
-    }
-
-    // Update the status to 'picked-up'
-    wasteRequest.status = "picked-up";
-    await wasteRequest.save();
-
-    res.status(200).json(wasteRequest);
+    const wasteRequests = await getAllWasteRequestsService();
+    res.json(wasteRequests);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
-};
-
-module.exports = {
-  createWasteRequest,
-  assignDriver,
-  markAsPickedUp,
-  getAllWasteRequests,
-  getUserWasteRequests,
-  markWasteAsPickedUp,
 };

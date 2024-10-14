@@ -1,8 +1,7 @@
-// services/placeService.js
-const Place = require('../models/Place');
+import Place from '../models/Place.js';
 
 // Add a new place
-exports.addPlace = async (streetName, binCount) => {
+export const addPlace = async (streetName, binCount) => {
   const place = new Place({
     streetName,
     binCount
@@ -11,16 +10,16 @@ exports.addPlace = async (streetName, binCount) => {
 };
 
 // Get all places
-exports.getAllPlaces = async () => {
+export const getAllPlaces = async () => {
   return await Place.find();
 };
 
 // Mark a place as collected
-exports.markAsCollected = async (placeId) => {
+export const markAsCollected = async (placeId) => {
   return await Place.findByIdAndUpdate(placeId, { isCollected: true });
 };
 
 // Report bin overflow
-exports.reportOverflow = async (placeId) => {
+export const reportOverflow = async (placeId) => {
   return await Place.findByIdAndUpdate(placeId, { overflowReported: true });
 };

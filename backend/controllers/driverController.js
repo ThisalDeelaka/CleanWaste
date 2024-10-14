@@ -1,14 +1,13 @@
-// controllers/driverController.js
-const driverService = require("../services/driverService");
-const userService = require("../services/userService");
-const notificationService = require("../services/notificationService");
-const wasteRequestService = require("../services/wasteRequestService"); // New service for waste requests
+import { getAssignedPickups as getAssignedPickupsService, assignPickupToDriver as assignPickupToDriverService, completeTask as completeTaskService } from '../services/driverService.js';
+import { findUsersByStreet } from '../services/userService.js';
+import { notifyUser } from '../services/notificationService.js';
+import { getWasteRequestsByStreet } from '../services/wasteRequestService.js';
 
 // Get pickups assigned to a driver
-const getAssignedPickups = async (req, res) => {
+export const getAssignedPickups = async (req, res) => {
   try {
     const driverId = req.user.userId; // Extracted from JWT
-    const pickups = await driverService.getAssignedPickups(driverId);
+    const pickups = await getAssignedPickupsService(driverId);
     res.json(pickups);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -16,63 +15,41 @@ const getAssignedPickups = async (req, res) => {
 };
 
 // Get waste requests for the driver's assigned street
-// Get waste requests for the driver's assigned street
-const getWasteRequestsByAssignedStreet = async (req, res) => {
+export const getWasteRequestsByAssignedStreet = async (req, res) => {
   try {
     const { street } = req.query;
 
-    // Check if the street parameter is provided
     if (!street) {
-      return res
-        .status(400)
-        .json({ message: "Street query parameter is required" });
+      return res.status(400).json({ message: "Street query parameter is required" });
     }
 
-    // Log the received street for debugging
-    console.log("Received street: ", street);
+    const wasteRequests = await getWasteRequestsByStreet(street);
 
-    // Fetch waste requests for the street
-    const wasteRequests = await wasteRequestService.getWasteRequestsByStreet(
-      street
-    );
-
-    // If no requests are found, return a 404
     if (!wasteRequests || wasteRequests.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No waste requests found for this street." });
+      return res.status(404).json({ message: "No waste requests found for this street." });
     }
 
     res.json(wasteRequests);
   } catch (error) {
-    console.error("Error fetching waste requests:", error); // Log the full error
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 // Assign a pickup task to a driver
-const assignPickupToDriver = async (req, res) => {
+export const assignPickupToDriver = async (req, res) => {
   try {
     const { driverId, street, pickupDate } = req.body;
 
-    const assignment = await driverService.assignPickupToDriver(
-      driverId,
-      street,
-      pickupDate
-    );
+    const assignment = await assignPickupToDriverService(driverId, street, pickupDate);
 
-    const driverMessage = `You have been assigned a new task for ${street} on ${new Date(
-      pickupDate
-    ).toLocaleDateString()}.`;
-    await notificationService.notifyUser(driverId, driverMessage);
+    const driverMessage = `You have been assigned a new task for ${street} on ${new Date(pickupDate).toLocaleDateString()}.`;
+    await notifyUser(driverId, driverMessage);
 
-    // Notify all users on the street
-    const usersOnStreet = await userService.findUsersByStreet(street);
-    const userMessage = `Your pickup driver is coming to ${street} on ${new Date(
-      pickupDate
-    ).toLocaleDateString()}.`;
+    const usersOnStreet = await findUsersByStreet(street);
+    const userMessage = `Your pickup driver is coming to ${street} on ${new Date(pickupDate).toLocaleDateString()}.`;
+
     for (const user of usersOnStreet) {
-      await notificationService.notifyUser(user._id, userMessage);
+      await notifyUser(user._id, userMessage);
     }
 
     res.status(201).json({
@@ -84,22 +61,15 @@ const assignPickupToDriver = async (req, res) => {
   }
 };
 
-// Controller to handle task completion
-const completeTask = async (req, res) => {
+// Complete a task
+export const completeTask = async (req, res) => {
   const { street } = req.body;
 
   try {
-    const assignment = await driverService.completeTask(street);
+    const assignment = await completeTaskService(street);
 
     res.status(200).json({ message: "Task marked as completed.", assignment });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-
-module.exports = {
-  getAssignedPickups,
-  assignPickupToDriver,
-  getWasteRequestsByAssignedStreet,
-  completeTask,
 };

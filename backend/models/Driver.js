@@ -1,5 +1,5 @@
-// models/DriverAssignment.js
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const driverAssignmentSchema = new Schema(
@@ -12,4 +12,4 @@ const driverAssignmentSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("DriverAssignment", driverAssignmentSchema);
+export default mongoose.model("DriverAssignment", driverAssignmentSchema);

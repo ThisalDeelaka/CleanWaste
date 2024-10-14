@@ -1,12 +1,11 @@
-// services/driverService.js
-const DriverAssignment = require("../models/Driver");
-const WasteRequest = require("../models/WasteRequest");
+import DriverAssignment from '../models/Driver.js';
+import WasteRequest from '../models/WasteRequest.js';
 
-const getAssignedPickups = async (driverId) => {
+export const getAssignedPickups = async (driverId) => {
   return await DriverAssignment.find({ driver: driverId, completed: false });
 };
 
-const assignPickupToDriver = async (driverId, street, pickupDate) => {
+export const assignPickupToDriver = async (driverId, street, pickupDate) => {
   const existingAssignment = await DriverAssignment.findOne({
     driver: driverId,
     assignedStreet: street,
@@ -14,9 +13,7 @@ const assignPickupToDriver = async (driverId, street, pickupDate) => {
   });
 
   if (existingAssignment) {
-    throw new Error(
-      "This driver already has an uncompleted assignment for this street."
-    );
+    throw new Error("This driver already has an uncompleted assignment for this street.");
   }
 
   const assignment = new DriverAssignment({
@@ -29,9 +26,8 @@ const assignPickupToDriver = async (driverId, street, pickupDate) => {
   return assignment;
 };
 
-
 // Service to mark a driver assignment as complete
-const completeTask = async (street) => {
+export const completeTask = async (street) => {
   try {
     const assignment = await DriverAssignment.findOneAndUpdate(
       { assignedStreet: street, completed: false },
@@ -47,13 +43,4 @@ const completeTask = async (street) => {
   } catch (error) {
     throw new Error(error.message);
   }
-};
-
-
-
-
-module.exports = {
-  getAssignedPickups,
-  assignPickupToDriver,
-  completeTask,
 };

@@ -1,10 +1,10 @@
-// routes/adminRoutes.js
-const express = require('express');
+import express from 'express';
+import { getAllWasteRequests } from '../controllers/wasteRequestController.js';
+import { verifyToken, isAdmin } from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
-const wasteRequestController = require('../controllers/wasteRequestController');
-const authMiddleware = require('../middlewares/authMiddleware');
 
 // Admin view all waste requests on the map
-router.get('/all-waste-requests', authMiddleware.verifyToken, authMiddleware.isAdmin, wasteRequestController.getAllWasteRequests);
+router.get('/all-waste-requests', verifyToken, isAdmin, getAllWasteRequests);
 
-module.exports = router;
+export default router;
