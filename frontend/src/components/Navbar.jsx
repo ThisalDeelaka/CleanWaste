@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { useAuth } from '../context/AuthContext';  // Importing the useAuth context
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext"; // Importing the useAuth context
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { auth, logout } = useAuth();  // Accessing auth (user and token) and logout from AuthContext
+  const { auth, logout } = useAuth(); // Accessing auth (user and token) and logout from AuthContext
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -13,8 +13,8 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    logout();  // Logout the user
-    navigate('/driverHomePage');  // Redirect to home page
+    logout(); // Logout the user
+    navigate("/"); // Redirect to home page after logout
   };
 
   return (
@@ -27,7 +27,7 @@ const Navbar = () => {
               ClearWaste
             </Link>
           </div>
-          
+
           {/* Links (hidden on mobile, visible on large screens) */}
           <div className="hidden md:flex space-x-4">
             <Link

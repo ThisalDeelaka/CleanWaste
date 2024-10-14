@@ -1,5 +1,5 @@
-const app = require('./app');  // Import the app created in app.js
-const dotenv = require('dotenv');
+const app = require("./app"); // Import the app created in app.js
+const dotenv = require("dotenv");
 
 // Load environment variables
 dotenv.config();

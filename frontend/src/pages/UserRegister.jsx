@@ -10,25 +10,42 @@ const UserRegister = () => {
     name: '',
     email: '',
     password: '',
-    address: '',
-    streetSide: '',
+    address: {
+      street: '',
+      city: '',
+      postalCode: '',
+    },
   });
-  const [showPassword, setShowPassword] = useState(false);
 
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    if (name.startsWith('address')) {
+      const [_, key] = name.split('.');  // Get the key (street, city, postalCode)
+      setFormData({
+        ...formData,
+        address: {
+          ...formData.address,
+          [key]: value,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
-    if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.streetSide) {
+    const { name, email, password, address } = formData;
+    if (!name || !email || !password || !address.street || !address.city || !address.postalCode) {
       alert('Please fill out all fields.');
       return;
     }
@@ -36,7 +53,7 @@ const UserRegister = () => {
     try {
       const response = await cleanWasteAPI.post('/users/register', formData);
       console.log('User registered:', response.data);
-      navigate('/login');
+      navigate('/login');  // Redirect to login page after successful registration
     } catch (error) {
       console.error('Error registering user', error);
       alert('Registration failed. Please try again.');
@@ -87,30 +104,33 @@ const UserRegister = () => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+
+          {/* Address Fields */}
           <InputField
-            label="Address (Street Name)"
-            value={formData.address}
+            label="Street"
+            value={formData.address.street}
             onChange={handleChange}
-            placeholder="Enter your address"
-            name="address"
+            placeholder="Enter your street"
+            name="address.street"
             className="w-full border border-gray-300 p-2 rounded-md"
           />
-          {/* Updated Dropdown for Street Side with Tailwind CSS */}
-          <div className="w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="streetSide">
-              Street Side
-            </label>
-            <select
-              name="streetSide"
-              value={formData.streetSide}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Select Street Side</option>
-              <option value="Left">Left</option>
-              <option value="Right">Right</option>
-            </select>
-          </div>
+          <InputField
+            label="City"
+            value={formData.address.city}
+            onChange={handleChange}
+            placeholder="Enter your city"
+            name="address.city"
+            className="w-full border border-gray-300 p-2 rounded-md"
+          />
+          <InputField
+            label="Postal Code"
+            value={formData.address.postalCode}
+            onChange={handleChange}
+            placeholder="Enter your postal code"
+            name="address.postalCode"
+            className="w-full border border-gray-300 p-2 rounded-md"
+          />
+
           <Button
             text="Register"
             type="submit"

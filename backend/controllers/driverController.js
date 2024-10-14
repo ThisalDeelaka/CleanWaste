@@ -1,53 +1,16 @@
-const {
-  loginDriver,
-  signupDriver,
-  getAssignedRoutes,
-  completePickup,
-} = require("../services/driverService");
+// controllers/driverController.js
+const driverService = require('../services/driverService');
 
-// Login driver
-const loginDriverController = async (req, res) => {
+const getAssignedPickups = async (req, res) => {
   try {
-    const token = await loginDriver(req.body); // Uses loginDriver service
-    res.json({ token });
-  } catch (error) {
-    res.status(401).json({ message: "Invalid email or password" });
-  }
-};
-
-// Driver signup
-const signupDriverController = async (req, res) => {
-  try {
-    const driver = await signupDriver(req.body); // Delegates to driverService
-    res.status(201).json({ message: "Driver registered successfully", driver });
+    const driverId = req.user.userId;  // Extracted from JWT
+    const pickups = await driverService.getAssignedPickups(driverId);
+    res.json(pickups);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-// Get assigned routes
-const getDriverRoutesController = async (req, res) => {
-  try {
-    const routes = await getAssignedRoutes(req.driver.driverId); // Delegates to driverService
-    res.json(routes);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Complete a pickup
-const completePickupForDriver = async (req, res) => {
-  try {
-    const pickup = await completePickup(req.body.pickupId, req.body.wasteCode); // Delegates to driverService
-    res.json(pickup);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 module.exports = {
-  loginDriverController,
-  signupDriverController,
-  getDriverRoutesController,
-  completePickupForDriver,
+  getAssignedPickups
 };

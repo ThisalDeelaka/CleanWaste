@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
@@ -10,29 +10,39 @@ export const AuthProvider = ({ children }) => {
     token: null,
   });
 
-  // Check localStorage for user and token when the component mounts
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
-    
+    // Fetch stored user and token from localStorage
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+
+    // Only update auth state if both user and token are found
     if (storedUser && storedToken) {
-      setAuth({
-        user: JSON.parse(storedUser),
-        token: storedToken,
-      });
+      try {
+        setAuth({
+          user: JSON.parse(storedUser), // Safely parse the user
+          token: storedToken, // Token doesn't need parsing
+        });
+      } catch (error) {
+        console.error("Error parsing user from localStorage:", error);
+      }
     }
-  }, []);
+  }, []); // This useEffect runs once when the component mounts
 
   const login = (user, token) => {
-    setAuth({ user, token });
-    localStorage.setItem('user', JSON.stringify(user));  // Store user in local storage
-    localStorage.setItem('token', token);  // Store token in local storage
+    if (user && token) {
+      // Ensure user and token are valid
+      setAuth({ user, token });
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+    } else {
+      console.error("Invalid user or token during login");
+    }
   };
 
   const logout = () => {
     setAuth({ user: null, token: null });
-    localStorage.removeItem('user');  // Remove user from local storage
-    localStorage.removeItem('token');  // Remove token from local storage
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
   };
 
   return (

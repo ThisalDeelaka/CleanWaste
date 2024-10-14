@@ -1,44 +1,31 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const connectDB = require("./config/db"); // MongoDB connection
-const cors = require("cors"); // Import the cors middleware
-const userRoutes = require("./routes/userRoutes");
-const driverRoutes = require("./routes/driverRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const wasteRoutes = require("./routes/wasteRoutes");
-
-// Load environment variables
-dotenv.config();
-
-// Connect to MongoDB
-connectDB();
-
-// Initialize express app
+const cors = require("cors"); // Import the cors package
+const { connectDB } = require("./config/db"); // Import the database connection
 const app = express();
 
-// Use cors middleware to enable CORS
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+dotenv.config();
 
-// Middleware to parse incoming JSON requests
+// Connect to MongoDB (Singleton pattern)
+connectDB();
+
+// Middleware for CORS
+app.use(cors()); // Add CORS middleware
+
+// Middleware for parsing JSON requests
 app.use(express.json());
 
+// Import routes
+const userRoutes = require("./routes/userRoutes");
+const wasteRequestRoutes = require("./routes/wasteRequestRoutes");
+const driverRoutes = require("./routes/driverRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+
 // Routes
-app.use("/api/users", userRoutes); // User-related routes
-app.use("/api/drivers", driverRoutes); // Driver-related routes
-app.use("/api/admin", adminRoutes); // Admin-related routes
-app.use("/api/waste", wasteRoutes); // Waste management routes
+app.use("/api/users", userRoutes);
+app.use("/api/waste-requests", wasteRequestRoutes);
+app.use("/api/drivers", driverRoutes);
+app.use("/api/admin", adminRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send({ message: "An internal server error occurred." });
-});
-
-// Export the app for the server.js to use
+// Remove the listen function from here
 module.exports = app;

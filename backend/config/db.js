@@ -1,5 +1,8 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+// config/db.js
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+// Load environment variables
 dotenv.config();
 
 const connectDB = async () => {
@@ -11,8 +14,12 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
-    process.exit(1);
+    process.exit(1); // Exit process with failure
   }
 };
 
-module.exports = connectDB;
+// Export both connectDB and jwtSecret
+module.exports = {
+  connectDB,
+  jwtSecret: process.env.JWT_SECRET, // Export the JWT secret
+};

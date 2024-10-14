@@ -1,41 +1,19 @@
+// models/User.js
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
+const userSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['user', 'admin', 'driver'], default: 'user' },
   address: {
-    type: String,
-    required: true
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    postalCode: { type: String, required: true },
   },
-  streetSide: {
-    type: String,
-    required: true // Left or Right
-  },
-  pickupSchedule: {
-    type: String // Day of the week (e.g., Wednesday)
-  },
-  wasteHistory: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Pickup'
-  }],
-  subscriptionStatus: {
-    type: Boolean,
-    default: false
-  }
-}, {
-  timestamps: true
-});
+  wasteRequests: [{ type: Schema.Types.ObjectId, ref: 'WasteRequest' }],
+  notifications: [{ message: String, date: { type: Date, default: Date.now } }]
+}, { timestamps: true });
 
-const User = mongoose.model('User', userSchema);
-module.exports = User;
+module.exports = mongoose.model('User', userSchema);
