@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import cleanWasteAPI from "../../api/cleanWasteAPI";
-import MapComponent from "../../components/MapComponent"; // Import the new MapComponent
-import Navbar from "../../components/Navbar"; // Import Navbar
+import MapComponent from "../../components/MapComponent"; // Import the MapComponent
+import Navbar from "../../components/DriverNavbar"; // Import Navbar
 import Footer from "../../components/Footer"; // Import Footer
 
 const PickupRequests = () => {
@@ -44,16 +44,29 @@ const PickupRequests = () => {
 
     try {
       // Call the API to confirm pickup
-      const response = await cleanWasteAPI.post(`/drivers/confirm-pickup`, {
-        requestId,
-        wasteId: wasteIdInput,
-      });
+      const response = await cleanWasteAPI.post(
+        `/waste-requests/mark-picked-up`,
+        {
+          requestId,
+          wasteId: wasteIdInput,
+        }
+      );
 
       if (response.status === 200) {
         alert("Pickup confirmed successfully!");
-        setPickedUpRequestId(null); // Clear the input and close the form
+
+        // Update the state to reflect the change
+        setWasteRequests((prevRequests) =>
+          prevRequests.map((request) =>
+            request._id === requestId
+              ? { ...request, status: "picked-up" }
+              : request
+          )
+        );
+
+        // Reset input fields
+        setPickedUpRequestId(null);
         setWasteIdInput("");
-        // Optionally, refetch the waste requests to update the status
       }
     } catch (error) {
       console.error("Error confirming pickup:", error);
@@ -103,9 +116,6 @@ const PickupRequests = () => {
                       <p className="text-sm text-gray-600">
                         Pickup Date:{" "}
                         {new Date(request.pickupDate).toLocaleDateString()}
-                      </p>
-                      <p className="text-sm text-gray-500 truncate">
-                        Location: {request.location.address}
                       </p>
                       <p
                         className={`text-sm font-semibold ${

@@ -15,12 +15,10 @@ const createWasteRequest = async (req, res) => {
     const { wasteType, location, userId } = req.body;
 
     if (!location || !location.latitude || !location.longitude) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Location is required and must include latitude and longitude.",
-        });
+      return res.status(400).json({
+        message:
+          "Location is required and must include latitude and longitude.",
+      });
     }
 
     const wasteCode = generateWasteCode(); // Generate a unique waste code
@@ -76,7 +74,9 @@ const markAsPickedUp = async (req, res) => {
 const getUserWasteRequests = async (req, res) => {
   try {
     const { userId } = req.params; // Get userId from route parameters
-    const wasteRequests = await wasteRequestService.getWasteRequestsByUserId(userId); // Call the service to get user-specific waste requests
+    const wasteRequests = await wasteRequestService.getWasteRequestsByUserId(
+      userId
+    ); // Call the service to get user-specific waste requests
     res.json(wasteRequests); // Send response with the waste requests
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -92,10 +92,39 @@ const getAllWasteRequests = async (req, res) => {
   }
 };
 
+// controllers/wasteRequestController.js
+
+const markWasteAsPickedUp = async (req, res) => {
+  try {
+    const { requestId, wasteId } = req.body;
+
+    // Find the waste request
+    const wasteRequest = await WasteRequest.findById(requestId);
+
+    if (!wasteRequest) {
+      return res.status(404).json({ message: "Waste request not found" });
+    }
+
+    // Check if the waste ID matches the waste request (if applicable)
+    if (wasteRequest.wasteCode !== wasteId) {
+      return res.status(400).json({ message: "Invalid Waste ID" });
+    }
+
+    // Update the status to 'picked-up'
+    wasteRequest.status = "picked-up";
+    await wasteRequest.save();
+
+    res.status(200).json(wasteRequest);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createWasteRequest,
   assignDriver,
   markAsPickedUp,
   getAllWasteRequests,
-  getUserWasteRequests
+  getUserWasteRequests,
+  markWasteAsPickedUp,
 };
