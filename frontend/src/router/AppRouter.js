@@ -4,6 +4,8 @@ import UserLogin from "../pages/UserLogin";
 import HomePage from "../pages/user/HomePage";
 
 import DriverHome from "../pages/driver/driverHomePage";
+import CommunityPage from "../pages/community/CommunityPage";
+import CreateEvent from "../pages/community/CreateEvent";
 
 import WasteTypeSelection from "../pages/user/WasteTypeSelection";
 import SortingGuidelines from "../pages/user/SortingGuidelines";
@@ -22,6 +24,10 @@ const AppRouter = () => (
       <Route path="/driverHomePage" element={<DriverHome />} />
   
       <Route path="/" element={<HomePage />} />
+
+      <Route path="/Community" element={<CommunityPage/>}/>
+      <Route path="/CreateEvent" element={<CreateEvent/>}/>
+      
       
       <Route path="/selection" element={<WasteTypeSelection />} />
       <Route path="/sorting-guidelines" element={<SortingGuidelines />} />
