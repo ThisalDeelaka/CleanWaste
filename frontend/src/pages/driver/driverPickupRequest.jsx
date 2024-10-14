@@ -32,7 +32,7 @@ const PickupRequests = () => {
 
   // Handle "Picked Up" button click
   const handlePickedUpClick = (requestId) => {
-    setPickedUpRequestId(requestId); // Set the current request to show the Waste ID input
+    setPickedUpRequestId(requestId); // Set the current request to show the Waste ID input and buttons
   };
 
   // Handle "Confirm" button click
@@ -59,6 +59,17 @@ const PickupRequests = () => {
       console.error("Error confirming pickup:", error);
       alert("Failed to confirm pickup.");
     }
+  };
+
+  // Handle "Dismiss" button click
+  const handleDismissPickup = () => {
+    alert("Pickup dismissed!");
+    setPickedUpRequestId(null); // Clear the picked-up state and dismiss the request
+  };
+
+  // Handle "Report" button click
+  const handleReportIssue = () => {
+    alert("Issue reported successfully!");
   };
 
   // Handle "View Location" button click
@@ -140,7 +151,7 @@ const PickupRequests = () => {
                     </div>
                   )}
 
-                  {/* Show Waste ID input and Confirm button if Picked Up is clicked */}
+                  {/* Show Waste ID input and additional buttons if Picked Up is clicked */}
                   {pickedUpRequestId === request._id && (
                     <div className="mt-4 space-y-2">
                       <input
@@ -150,12 +161,26 @@ const PickupRequests = () => {
                         value={wasteIdInput}
                         onChange={(e) => setWasteIdInput(e.target.value)}
                       />
-                      <button
-                        className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200"
-                        onClick={() => handleConfirmPickup(request._id)}
-                      >
-                        Confirm Pickup
-                      </button>
+                      <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                        <button
+                          className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200"
+                          onClick={() => handleConfirmPickup(request._id)}
+                        >
+                          Confirm Pickup
+                        </button>
+                        <button
+                          className="w-full md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition duration-200"
+                          onClick={handleDismissPickup}
+                        >
+                          Dismiss
+                        </button>
+                        <button
+                          className="w-full md:w-auto px-4 py-2 bg-black text-white font-semibold rounded-md hover:bg-gray-800 transition duration-200"
+                          onClick={handleReportIssue}
+                        >
+                          Report
+                        </button>
+                      </div>
                     </div>
                   )}
                 </li>
