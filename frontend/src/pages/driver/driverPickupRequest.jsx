@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import cleanWasteAPI from "../../api/cleanWasteAPI";
 
-import MapComponent from "../../components/MapComponent"; // Import the MapComponent
-import DriverNavbar from "../../components/DriverNavbar"; // Import Navbar
-import Footer from "../../components/Footer"; // Import Footer
-import { FaTasks, FaChevronDown, FaCheckCircle } from "react-icons/fa"; // Import icons
-import { Menu, Dropdown, Button } from "antd"; // Using Ant Design dropdown
+import MapComponent from "../../components/MapComponent";
+import DriverNavbar from "../../components/DriverNavbar";
+import Footer from "../../components/Footer";
+import { FaTasks, FaChevronDown, FaCheckCircle } from "react-icons/fa";
+import { Menu, Dropdown, Button } from "antd";
 
 const PickupRequests = () => {
   const [searchParams] = useSearchParams();
   const [wasteRequests, setWasteRequests] = useState([]);
-  const [driverTasks, setDriverTasks] = useState([]); // Store the driver's tasks
-  const [pickedUpRequestId, setPickedUpRequestId] = useState(null); // Store the ID of the picked-up request
-  const [wasteIdInput, setWasteIdInput] = useState(""); // Store the Waste ID entered by the driver
-  const [expandedRequestId, setExpandedRequestId] = useState(null); // Store the ID of the request whose location map is expanded
-  const street = searchParams.get("street"); // Get street query parameter
+  const [driverTasks, setDriverTasks] = useState([]);
+  const [pickedUpRequestId, setPickedUpRequestId] = useState(null);
+  const [wasteIdInput, setWasteIdInput] = useState("");
+  const [expandedRequestId, setExpandedRequestId] = useState(null);
+  const street = searchParams.get("street");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWasteRequests = async () => {
@@ -31,7 +32,6 @@ const PickupRequests = () => {
 
     const fetchDriverTasks = async () => {
       try {
-        // Fetch all tasks for the driver
         const response = await cleanWasteAPI.get(`/drivers/assigned-pickups`);
         setDriverTasks(response.data || []);
       } catch (error) {
@@ -43,68 +43,10 @@ const PickupRequests = () => {
       fetchWasteRequests();
     }
 
-    // Fetch the tasks when the component mounts
     fetchDriverTasks();
   }, [street]);
 
-  // Handle "Picked Up" button click
-  const handlePickedUpClick = (requestId) => {
-    setPickedUpRequestId(requestId); // Set the current request to show the Waste ID input and buttons
-  };
-
-  // Handle "Confirm" button click
-  const handleConfirmPickup = async (requestId) => {
-    if (!wasteIdInput) {
-      alert("Please enter a valid Waste ID.");
-      return;
-    }
-
-    try {
-      // Call the API to confirm pickup
-      const response = await cleanWasteAPI.post(`/drivers/mark-picked-up`, {
-        requestId,
-        wasteId: wasteIdInput,
-      });
-
-      if (response.status === 200) {
-        alert("Pickup confirmed successfully!");
-
-        // Update the state to reflect the change
-        setWasteRequests((prevRequests) =>
-          prevRequests.map((request) =>
-            request._id === requestId
-              ? { ...request, status: "picked-up" }
-              : request
-          )
-        );
-
-        // Reset input fields
-        setPickedUpRequestId(null);
-        setWasteIdInput("");
-      }
-    } catch (error) {
-      console.error("Error confirming pickup:", error);
-      alert("Failed to confirm pickup.");
-    }
-  };
-
-  // Handle "Dismiss" button click
-  const handleDismissPickup = () => {
-    alert("Pickup dismissed!");
-    setPickedUpRequestId(null); // Clear the picked-up state and dismiss the request
-  };
-
-  // Handle "Report" button click
-  const handleReportIssue = () => {
-    alert("Issue reported successfully!");
-  };
-
-  // Handle "View Location" button click
-  const toggleMap = (requestId) => {
-    setExpandedRequestId(expandedRequestId === requestId ? null : requestId); // Toggle map display
-  };
-
-  // Dropdown menu content for tasks
+  // Define taskMenu for the dropdown
   const taskMenu = (
     <Menu className="shadow-lg rounded-md bg-white">
       {driverTasks.length > 0 ? (
@@ -121,11 +63,83 @@ const PickupRequests = () => {
         ))
       ) : (
         <Menu.Item>
-          <span className="text-gray-500 px-4 py-2 block">No tasks assigned.</span>
+          <span className="text-gray-500 px-4 py-2 block">
+            No tasks assigned.
+          </span>
         </Menu.Item>
       )}
     </Menu>
   );
+
+  // Handle "Picked Up" button click
+  const handlePickedUpClick = (requestId) => {
+    setPickedUpRequestId(requestId);
+  };
+
+  const handleConfirmPickup = async (requestId) => {
+    if (!wasteIdInput) {
+      alert("Please enter a valid Waste ID.");
+      return;
+    }
+
+    try {
+      const response = await cleanWasteAPI.post(`/drivers/mark-picked-up`, {
+        requestId,
+        wasteId: wasteIdInput,
+      });
+
+      if (response.status === 200) {
+        alert("Pickup confirmed successfully!");
+
+        setWasteRequests((prevRequests) =>
+          prevRequests.map((request) =>
+            request._id === requestId
+              ? { ...request, status: "picked-up" }
+              : request
+          )
+        );
+
+        setPickedUpRequestId(null);
+        setWasteIdInput("");
+      }
+    } catch (error) {
+      console.error("Error confirming pickup:", error);
+      alert("Failed to confirm pickup.");
+    }
+  };
+
+  const handleDismissPickup = () => {
+    alert("Pickup dismissed!");
+    setPickedUpRequestId(null);
+  };
+
+  const handleReportIssue = () => {
+    alert("Issue reported successfully!");
+  };
+
+  const toggleMap = (requestId) => {
+    setExpandedRequestId(expandedRequestId === requestId ? null : requestId);
+  };
+
+  const allPickedUp = wasteRequests.every(
+    (request) => request.status === "picked-up"
+  );
+
+  const handleTaskComplete = async () => {
+    try {
+      const response = await cleanWasteAPI.post(`/drivers/complete-task`, {
+        street,
+      });
+
+      if (response.status === 200) {
+        alert("Task marked as completed!");
+        navigate("/driverNotifications");
+      }
+    } catch (error) {
+      console.error("Error completing task:", error);
+      alert("Failed to complete the task.");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -177,10 +191,8 @@ const PickupRequests = () => {
                     </div>
 
                     <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 w-full md:w-auto justify-end">
-                      {/* If status is not "picked-up", show buttons */}
                       {request.status !== "picked-up" ? (
                         <>
-                          {/* View Location Button */}
                           <button
                             className="w-full md:w-auto px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition duration-200"
                             onClick={() => toggleMap(request._id)}
@@ -190,7 +202,6 @@ const PickupRequests = () => {
                               : "View Location"}
                           </button>
 
-                          {/* Picked Up Button */}
                           <button
                             className="w-full md:w-auto px-4 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-200"
                             onClick={() => handlePickedUpClick(request._id)}
@@ -199,7 +210,6 @@ const PickupRequests = () => {
                           </button>
                         </>
                       ) : (
-                        // If status is "picked-up", show completion message and icon
                         <div className="flex items-center space-x-2 text-green-600">
                           <FaCheckCircle size={20} />
                           <span className="font-semibold">
@@ -210,7 +220,6 @@ const PickupRequests = () => {
                     </div>
                   </div>
 
-                  {/* Conditionally Render the Map */}
                   {expandedRequestId === request._id && (
                     <div className="mt-4">
                       <MapComponent
@@ -220,7 +229,6 @@ const PickupRequests = () => {
                     </div>
                   )}
 
-                  {/* Show Waste ID input and additional buttons if Picked Up is clicked */}
                   {pickedUpRequestId === request._id && (
                     <div className="mt-4 space-y-2">
                       <input
@@ -262,10 +270,20 @@ const PickupRequests = () => {
               </p>
             </div>
           )}
+
+          {allPickedUp && (
+            <div className="mt-8 flex justify-center">
+              <button
+                className="px-6 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-200"
+                onClick={handleTaskComplete}
+              >
+                Task Complete
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

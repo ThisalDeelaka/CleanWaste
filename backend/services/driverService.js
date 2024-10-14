@@ -29,7 +29,31 @@ const assignPickupToDriver = async (driverId, street, pickupDate) => {
   return assignment;
 };
 
+
+// Service to mark a driver assignment as complete
+const completeTask = async (street) => {
+  try {
+    const assignment = await DriverAssignment.findOneAndUpdate(
+      { assignedStreet: street, completed: false },
+      { completed: true },
+      { new: true }
+    );
+
+    if (!assignment) {
+      throw new Error('Task not found or already completed.');
+    }
+
+    return assignment;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
+
+
 module.exports = {
   getAssignedPickups,
   assignPickupToDriver,
+  completeTask,
 };

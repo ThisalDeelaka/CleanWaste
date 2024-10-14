@@ -28,4 +28,11 @@ router.post(
   driverController.assignPickupToDriver
 );
 
+router.post(
+  "/complete-task",
+  authMiddleware.verifyToken,
+  authMiddleware.isDriver,
+  driverController.completeTask
+);
+
 module.exports = router;

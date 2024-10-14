@@ -8,7 +8,7 @@ const register = async (req, res) => {
   try {
     const { name, email, password, role, address } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     // Create a new user (or driver depending on role)
     const user = await userService.registerUser({
       name,
@@ -36,7 +36,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       config.jwtSecret,
-      { expiresIn: "1h" }
+      { expiresIn: "4h" }
     );
 
     // Return both the user and token in the response
@@ -69,7 +69,7 @@ const getUserProfile = async (req, res) => {
 
 const getAllDrivers = async (req, res) => {
   try {
-    const drivers = await userService.findUsersByRole('driver');
+    const drivers = await userService.findUsersByRole("driver");
     res.json(drivers);
   } catch (error) {
     res.status(500).json({ message: error.message });

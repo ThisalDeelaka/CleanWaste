@@ -84,8 +84,22 @@ const assignPickupToDriver = async (req, res) => {
   }
 };
 
+// Controller to handle task completion
+const completeTask = async (req, res) => {
+  const { street } = req.body;
+
+  try {
+    const assignment = await driverService.completeTask(street);
+
+    res.status(200).json({ message: "Task marked as completed.", assignment });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAssignedPickups,
   assignPickupToDriver,
   getWasteRequestsByAssignedStreet,
+  completeTask,
 };
