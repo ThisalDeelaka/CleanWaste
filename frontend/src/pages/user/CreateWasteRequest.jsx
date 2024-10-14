@@ -20,15 +20,24 @@ const CreateWasteRequest = () => {
       alert("Please select a location for waste pickup.");
       return;
     }
-
+  
     try {
       const response = await cleanWasteAPI.post("/waste-requests/create", {
         wasteType: selectedWasteTypes,
         location: pickupLocation,
         userId: auth.user._id, // User ID from the authenticated user
       });
+  
       console.log("Waste request created:", response.data);
       alert("Waste request created successfully!");
+  
+      // If the response contains a QR code (base64), you can display it
+      const qrCode = response.data.qrCode;
+      if (qrCode) {
+        const qrCodeWindow = window.open();
+        qrCodeWindow.document.write(`<img src="${qrCode}" alt="QR Code"/>`);
+      }
+  
       navigate("/"); // Redirect user to home after successful request
     } catch (error) {
       console.error("Error creating waste request:", error);
