@@ -5,7 +5,7 @@ import cleanWasteAPI from "../../api/cleanWasteAPI";
 import MapComponent from "../../components/MapComponent"; // Import the MapComponent
 import DriverNavbar from "../../components/DriverNavbar"; // Import Navbar
 import Footer from "../../components/Footer"; // Import Footer
-import { FaCheckCircle, FaTasks } from "react-icons/fa"; // Import icons
+import { FaTasks, FaChevronDown, FaCheckCircle } from "react-icons/fa"; // Import icons
 import { Menu, Dropdown, Button } from "antd"; // Using Ant Design dropdown
 
 const PickupRequests = () => {
@@ -106,11 +106,14 @@ const PickupRequests = () => {
 
   // Dropdown menu content for tasks
   const taskMenu = (
-    <Menu>
+    <Menu className="shadow-lg rounded-md bg-white">
       {driverTasks.length > 0 ? (
         driverTasks.map((task) => (
           <Menu.Item key={task._id}>
-            <Link to={`/pickup-requests?street=${task.assignedStreet}`}>
+            <Link
+              className="text-gray-700 block px-4 py-2 hover:bg-gray-100"
+              to={`/pickup-requests?street=${task.assignedStreet}`}
+            >
               {task.assignedStreet} -{" "}
               {new Date(task.assignmentDate).toLocaleDateString()}
             </Link>
@@ -118,7 +121,7 @@ const PickupRequests = () => {
         ))
       ) : (
         <Menu.Item>
-          <span>No tasks assigned.</span>
+          <span className="text-gray-500 px-4 py-2 block">No tasks assigned.</span>
         </Menu.Item>
       )}
     </Menu>
@@ -129,18 +132,19 @@ const PickupRequests = () => {
       {/* Navbar */}
       <DriverNavbar />
 
-      {/* Dropdown for Driver Tasks */}
-      <div className="flex justify-end pr-8 pt-4">
+      {/* Task Panel */}
+      <div className="flex justify-end items-center bg-white shadow p-4 z-10 sticky top-0 w-full">
         <Dropdown overlay={taskMenu} trigger={["click"]}>
-          <Button className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold">
-            <FaTasks className="mr-2" />
-            View My Tasks
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center space-x-2">
+            <FaTasks />
+            <span>View My Tasks</span>
+            <FaChevronDown />
           </Button>
         </Dropdown>
       </div>
 
       {/* Main Content */}
-      <div className="flex-grow bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="flex-grow bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-[#175E5E] mb-8">
           Waste Requests for {street}
         </h1>
