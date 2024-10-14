@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import cleanWasteAPI from "../../api/cleanWasteAPI";
+
 import MapComponent from "../../components/MapComponent"; // Import the MapComponent
-import Navbar from "../../components/DriverNavbar"; // Import Navbar
+import DriverNavbar from "../../components/DriverNavbar"; // Import Navbar
 import Footer from "../../components/Footer"; // Import Footer
 
 const PickupRequests = () => {
@@ -93,7 +94,7 @@ const PickupRequests = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      <Navbar />
+      <DriverNavbar />
 
       {/* Main Content */}
       <div className="flex-grow bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
