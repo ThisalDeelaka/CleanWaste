@@ -1,12 +1,12 @@
 import React from "react";
-import DNavbar from "../../components/driverNavbar";
+import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 
 const DriverHome = () => {
   return (
     <div>
       {/* Navbar */}
-      <DNavbar />
+      <Navbar />
 
       {/* Hero Section */}
       <main className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#175E5E] to-[#134c4c] text-white">

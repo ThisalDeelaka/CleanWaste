@@ -1,5 +1,9 @@
 // config/db.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+// Load environment variables
+dotenv.config();
 
 const connectDB = async () => {
   try {
@@ -14,4 +18,8 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+// Export both connectDB and jwtSecret
+module.exports = {
+  connectDB,
+  jwtSecret: process.env.JWT_SECRET, // Export the JWT secret
+};
