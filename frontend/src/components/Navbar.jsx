@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaUser } from "react-icons/fa"; // Import FaUser for the profile icon
 import { useAuth } from "../context/AuthContext"; // Importing the useAuth context
 
 const Navbar = () => {
@@ -29,7 +29,7 @@ const Navbar = () => {
           </div>
 
           {/* Links (hidden on mobile, visible on large screens) */}
-          <div className="hidden md:flex space-x-4">
+          <div className="hidden md:flex space-x-4 items-center">
             <Link
               to="/"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
@@ -57,12 +57,20 @@ const Navbar = () => {
 
             {/* Conditionally show Login/Sign Up or Logout based on auth.user */}
             {auth?.user ? (
-              <button
-                onClick={handleLogout}
-                className="px-3 py-2 bg-red-500 rounded-md text-sm font-medium hover:bg-red-600 transition-all duration-200"
-              >
-                Logout
-              </button>
+              <>
+                <Link to="/profile" className="text-white hover:text-yellow-400">
+                  {/* Profile Icon with a Circle */}
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-yellow-400 p-1 hover:border-yellow-300 transition-all duration-200">
+                    <FaUser size={24} />
+                  </div>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-2 bg-red-500 rounded-md text-sm font-medium hover:bg-red-600 transition-all duration-200"
+                >
+                  Logout
+                </button>
+              </>
             ) : (
               <>
                 <Link
@@ -124,15 +132,24 @@ const Navbar = () => {
 
               {/* Conditionally show Login/Sign Up or Logout */}
               {auth?.user ? (
-                <button
-                  onClick={() => {
-                    toggleMenu();
-                    handleLogout();
-                  }}
-                  className="px-3 py-2 bg-[#ffe599] rounded-md text-sm font-medium hover:bg-yellow-300 transition-all duration-200"
-                >
-                  Logout
-                </button>
+                <>
+                  <Link
+                    to="/profile"
+                    onClick={toggleMenu}
+                    className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      toggleMenu();
+                      handleLogout();
+                    }}
+                    className="px-3 py-2 bg-[#ffe599] rounded-md text-sm font-medium hover:bg-yellow-300 transition-all duration-200"
+                  >
+                    Logout
+                  </button>
+                </>
               ) : (
                 <>
                   <Link

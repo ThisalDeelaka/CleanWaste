@@ -73,6 +73,16 @@ const markAsPickedUp = async (req, res) => {
   }
 };
 
+const getUserWasteRequests = async (req, res) => {
+  try {
+    const { userId } = req.params; // Get userId from route parameters
+    const wasteRequests = await wasteRequestService.getWasteRequestsByUserId(userId); // Call the service to get user-specific waste requests
+    res.json(wasteRequests); // Send response with the waste requests
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const getAllWasteRequests = async (req, res) => {
   try {
     const wasteRequests = await wasteRequestService.getAllWasteRequests();
@@ -87,4 +97,5 @@ module.exports = {
   assignDriver,
   markAsPickedUp,
   getAllWasteRequests,
+  getUserWasteRequests
 };

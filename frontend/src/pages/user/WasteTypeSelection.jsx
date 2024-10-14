@@ -41,19 +41,19 @@ const WasteTypeSelection = () => {
 
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-6 sm:py-12">
         {/* Step Indicator */}
-        <div className="w-full max-w-lg sm:max-w-xl mb-4">
+        <div className="w-full max-w-lg sm:max-w-xl mb-6">
           <div className="h-2 bg-gray-300 rounded-full">
             <div className="h-full bg-[#175E5E]" style={{ width: '33%' }}></div>
           </div>
           <p className="text-sm text-[#175E5E] text-center mt-2">Step 1 of 2: Select Waste Types</p>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#175E5E] mb-6 text-center">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#175E5E] mb-6 text-center">
           What are you disposing of today?
         </h1>
 
         {/* Selected Waste Types Counter */}
-        <p className="text-lg text-[#175E5E] mb-4">
+        <p className="text-lg text-[#175E5E] mb-6">
           {selectedWasteTypes.length} waste type{selectedWasteTypes.length !== 1 ? 's' : ''} selected
         </p>
 
@@ -63,7 +63,7 @@ const WasteTypeSelection = () => {
             <button
               key={wasteType}
               onClick={() => handleWasteTypeSelection(wasteType)}
-              className={`w-full px-4 py-2 rounded-lg border font-semibold text-sm sm:text-base mb-2 transition duration-200 hover:bg-[#134c4c] hover:text-white ${
+              className={`w-full px-4 py-3 rounded-lg border font-semibold text-sm sm:text-base mb-2 transition duration-200 hover:bg-[#134c4c] hover:text-white shadow-lg ${
                 selectedWasteTypes.includes(wasteType)
                   ? 'bg-[#175E5E] text-white'
                   : 'bg-white text-[#175E5E] border-[#175E5E]'
@@ -78,7 +78,7 @@ const WasteTypeSelection = () => {
         <Button
           text="Next"
           onClick={handleNext}
-          className="mt-8 px-6 sm:px-8 py-3 sm:py-4 bg-[#175E5E] text-white font-semibold rounded-lg shadow-lg hover:bg-[#134c4c] transition duration-200"
+          className="mt-10 px-6 sm:px-8 py-3 sm:py-4 bg-[#175E5E] text-white font-semibold rounded-lg shadow-lg hover:bg-[#134c4c] transition duration-200"
         />
       </main>
 

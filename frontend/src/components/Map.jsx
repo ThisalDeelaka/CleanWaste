@@ -13,8 +13,8 @@ const defaultCenter = {
   lng: 80.7718,
 };
 
-const Map = ({ onLocationSelect }) => {
-  const [markerPosition, setMarkerPosition] = useState(defaultCenter); // Marker position
+const Map = ({ onLocationSelect, wasteRequests = [] }) => {
+  const [markerPosition, setMarkerPosition] = useState(defaultCenter); // Marker position for user location
   const [center, setCenter] = useState(defaultCenter); // Map center position
 
   // Load Google Maps API
@@ -30,10 +30,12 @@ const Map = ({ onLocationSelect }) => {
           const { latitude, longitude } = position.coords;
           setCenter({ lat: latitude, lng: longitude });
           setMarkerPosition({ lat: latitude, lng: longitude });
-          onLocationSelect({ latitude, longitude });
+          if (onLocationSelect) {
+            onLocationSelect({ latitude, longitude }); // Only call if the function exists
+          }
         },
         (error) => {
-          console.error("Error getting location: ", error);
+          console.error('Error getting location: ', error);
         }
       );
     }
@@ -45,7 +47,9 @@ const Map = ({ onLocationSelect }) => {
       const lat = event.latLng.lat();
       const lng = event.latLng.lng();
       setMarkerPosition({ lat, lng });
-      onLocationSelect({ latitude: lat, longitude: lng });
+      if (onLocationSelect) {
+        onLocationSelect({ latitude: lat, longitude: lng }); // Only call if the function exists
+      }
     },
     [onLocationSelect]
   );
@@ -62,6 +66,18 @@ const Map = ({ onLocationSelect }) => {
       onClick={onMapClick} // Update marker on map click
     >
       {markerPosition && <Marker position={markerPosition} />}
+
+      {/* Display markers for waste requests */}
+      {wasteRequests.map((request) => (
+        <Marker
+          key={request._id}
+          position={{
+            lat: request.location.latitude,
+            lng: request.location.longitude,
+          }}
+          onClick={() => onLocationSelect && onLocationSelect(request.location)} // Only call if function exists
+        />
+      ))}
     </GoogleMap>
   );
 };
