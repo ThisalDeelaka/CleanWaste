@@ -16,6 +16,10 @@ import DriverAssignPage from "../pages/admin/DriverAssignPage";
 import UserNotification from "../pages/user/profile/UserNotification";
 import DriverNotification from "../pages/driver/DriverNotification";
 import WasteRequestConfirmation from "../pages/user/WasteRequestConfirmation";
+<<<<<<< Updated upstream
+=======
+import BulkWaste from "../pages/user/BulkWaste";
+>>>>>>> Stashed changes
 
 // import Dashboard from '../pages/Dashboard';
 

@@ -117,6 +117,15 @@ export default function CreateEvent() {
 
       </div>
 
+<<<<<<< Updated upstream
     </div>
   )
 }
+=======
+      <footer className="w-full bg-gray-800 text-white text-center p-4">
+        <p>© 2024 Event Manager. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+};
+>>>>>>> Stashed changes
