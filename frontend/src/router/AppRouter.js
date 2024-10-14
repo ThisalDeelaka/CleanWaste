@@ -17,11 +17,9 @@ import UserNotification from "../pages/user/profile/UserNotification";
 import DriverNotification from "../pages/driver/DriverNotification";
 import WasteRequestConfirmation from "../pages/user/WasteRequestConfirmation";
 import PickupRequests from "../pages/driver/driverPickupRequest";
-=======
 import BulkWaste from "../pages/user/BulkWaste";
 import CommunityPage from "../pages/community/CommunityPage";
 import CreateEvent from "../pages/community/CreateEvent";
-
 
 // import Dashboard from '../pages/Dashboard';
 
@@ -44,22 +42,22 @@ const AppRouter = () => (
       {/* driver routes */}
 
       <Route path="/BulkWaste" element={<BulkWaste />} />
-     {/* driver routes */}
+      {/* driver routes */}
 
       <Route path="/driverHomePage" element={<DriverHome />} />
       {/* admin routes */}
       <Route path="/AdminHomePage" element={<AdminHomePage />} />
 
       <Route path="/driverAssign" element={<DriverAssignPage />} />
-      
+
       <Route path="/notifications" element={<UserNotification />} />
       <Route path="/driverNotifications" element={<DriverNotification />} />
 
       <Route path="/pickup-requests" element={<PickupRequests />} />
 
       {/* community routes */}
-      <Route path="/Community" element={<CommunityPage/>}/>
-      <Route path="/CreateEvent" element={<CreateEvent/>}/>
+      <Route path="/Community" element={<CommunityPage />} />
+      <Route path="/CreateEvent" element={<CreateEvent />} />
     </Routes>
   </Router>
 );
