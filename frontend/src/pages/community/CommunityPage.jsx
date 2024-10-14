@@ -1,9 +1,11 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 const CommunityPage = () => {
+
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -22,11 +24,11 @@ const CommunityPage = () => {
           
           {/* Call to Action Buttons */}
           <div className="mt-8 flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-6 justify-center">
-            <Link to="/CreateEvent">
-            <button className="px-8 py-4 bg-yellow-400 text-[#175E5E] font-semibold rounded-lg shadow-lg hover:bg-yellow-300 hover:shadow-xl transition-all duration-300">
+            
+            <button onClick={() => navigate('/CreateEvent')} className="px-8 py-4 bg-yellow-400 text-[#175E5E] font-semibold rounded-lg shadow-lg hover:bg-yellow-300 hover:shadow-xl transition-all duration-300">
               Create a Event
             </button>
-            </Link>
+      
             <button className="px-8 py-4 bg-transparent text-white border border-white font-semibold rounded-lg hover:bg-white hover:text-[#175E5E] transition-all duration-300">
               Learn More
             </button>
@@ -34,16 +36,8 @@ const CommunityPage = () => {
         </div>
 
       </main>
-
       {/* Footer */}
       <Footer />
-<<<<<<< Updated upstream
-=======
-
-      <footer className="w-full bg-gray-800 text-white text-center p-4">
-        <p>© 2024 Community Page. All rights reserved.</p>
-      </footer>
->>>>>>> Stashed changes
     </div>
   );
 };

@@ -1,3 +1,5 @@
+const eventService = require('../services/eventService');
+
 const createEvent = async (req, res) => {
     try {
         const { Eventname, EventDescription, EventDate, EventTime, eventLocation, setby } = req.body;
@@ -6,7 +8,10 @@ const createEvent = async (req, res) => {
         EventDescription,
         EventDate,
         EventTime,
-        eventLocation,
+        eventLocation:{
+            latitude: { type: Number, required: true },
+            longitude: { type: Number, required: true },
+        },
         setby,
         });
         res.json(event);

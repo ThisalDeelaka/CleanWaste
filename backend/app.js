@@ -20,12 +20,14 @@ const userRoutes = require("./routes/userRoutes");
 const wasteRequestRoutes = require("./routes/wasteRequestRoutes");
 const driverRoutes = require("./routes/driverRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const eventRoutes = require("./routes/eventRoutes");
 
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/waste-requests", wasteRequestRoutes);
 app.use("/api/drivers", driverRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/event",eventRoutes);
 
 // Remove the listen function from here
 module.exports = app;
