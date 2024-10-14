@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import cleanWasteAPI from '../../api/cleanWasteAPI';
 import Navbar from '../../components/Navbar'; 
@@ -6,22 +6,25 @@ import Footer from '../../components/Footer';
 import Map from '../../components/Map'; 
 import Button from '../../components/Button';
 import AdminNav from '../../components/AdminNav';
+import { Line } from 'react-chartjs-2';
 
 const AdminHomePage = () => {
-  const [wasteRequests, setWasteRequests] = useState([]); // All waste requests
-  const [selectedRequest, setSelectedRequest] = useState(null); // The selected waste request to assign a driver
-  const [drivers, setDrivers] = useState([]); // All available drivers
-  const [selectedDriver, setSelectedDriver] = useState(''); // Driver selected for a request
-  const [streetName, setStreetName] = useState(''); // Street name input
+  const [wasteRequests, setWasteRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [drivers, setDrivers] = useState([]);
+  const [selectedDriver, setSelectedDriver] = useState('');
+  const [streetName, setStreetName] = useState('');
+  const [usersCount, setUsersCount] = useState(0);
+  const [driversCount, setDriversCount] = useState(0);
+  const [wasteRequestsCount, setWasteRequestsCount] = useState(0);
   const navigate = useNavigate();
 
-  // Fetch waste requests for the map and drivers
   useEffect(() => {
     const fetchWasteRequests = async () => {
       try {
-        const response = await cleanWasteAPI.get('/waste-requests/all-waste-requests'); // Fetch all waste requests
+        const response = await cleanWasteAPI.get('/waste-requests/all-waste-requests');
         setWasteRequests(response.data);
-        console.log('Waste requests:', response.data);
+        setWasteRequestsCount(response.data.length);
       } catch (error) {
         console.error('Error fetching waste requests:', error);
       }
@@ -29,18 +32,28 @@ const AdminHomePage = () => {
     
     const fetchDrivers = async () => {
       try {
-        const response = await cleanWasteAPI.get('/api/drivers'); // Fetch drivers list
+        const response = await cleanWasteAPI.get('/api/drivers');
         setDrivers(response.data);
+        setDriversCount(response.data.length);
       } catch (error) {
         console.error('Error fetching drivers:', error);
       }
     };
 
+    const fetchUsersCount = async () => {
+      try {
+        const response = await cleanWasteAPI.get('/api/users/count');
+        setUsersCount(response.data.count);
+      } catch (error) {
+        console.error('Error fetching users count:', error);
+      }
+    };
+
     fetchWasteRequests();
     fetchDrivers();
+    fetchUsersCount();
   }, []);
 
-  // Handle driver assignment
   const handleAssignDriver = async () => {
     if (!selectedRequest || !selectedDriver || !streetName) {
       alert('Please select a waste request, driver, and enter the street name.');
@@ -48,49 +61,83 @@ const AdminHomePage = () => {
     }
 
     try {
-      const response = await cleanWasteAPI.post('/api/waste-requests/assign-driver', {
+      await cleanWasteAPI.post('/api/waste-requests/assign-driver', {
         requestId: selectedRequest._id,
         driverId: selectedDriver,
         streetName,
       });
 
       alert('Driver assigned successfully!');
-      setSelectedRequest(null); // Clear selected request
-      setStreetName(''); // Clear street name
-      setSelectedDriver(''); // Clear selected driver
+      setSelectedRequest(null);
+      setStreetName('');
+      setSelectedDriver('');
     } catch (error) {
       console.error('Error assigning driver:', error);
       alert('Failed to assign driver.');
     }
   };
 
-  // Handle selecting a waste request on the map
   const handleWasteRequestSelect = (request) => {
-    setSelectedRequest(request); // Set the selected request for assignment
+    setSelectedRequest(request);
+  };
+
+  const wasteData = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+    datasets: [
+      {
+        label: 'Waste Collected (kg)',
+        data: [30, 45, 60, 50, 80, 70],
+        fill: false,
+        backgroundColor: '#175E5E',
+        borderColor: '#175E5E',
+      }
+    ]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <AdminNav />
+
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-6 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#175E5E] mb-8 text-center">
           Admin Dashboard
         </h1>
 
-        {/* Display Waste Requests on the Map */}
-        <Map
-          wasteRequests={wasteRequests} // Pass waste requests to map
-          onRequestSelect={handleWasteRequestSelect} // Function to set the selected request
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 w-full px-4">
+          <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-[#175E5E]">
+            <h2 className="text-xl font-semibold text-[#175E5E]">Total Users</h2>
+            <p className="text-4xl font-bold text-[#175E5E] mt-4">{usersCount}</p>
+          </div>
+          <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-yellow-500">
+            <h2 className="text-xl font-semibold text-[#175E5E]">Total Drivers</h2>
+            <p className="text-4xl font-bold text-yellow-500 mt-4">{driversCount}</p>
+          </div>
+          <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500">
+            <h2 className="text-xl font-semibold text-[#175E5E]">Total Waste Requests</h2>
+            <p className="text-4xl font-bold text-green-500 mt-4">{wasteRequestsCount}</p>
+          </div>
+        </div>
 
+        <Map
+          wasteRequests={wasteRequests}
+          onRequestSelect={handleWasteRequestSelect}
         />
 
-
-        {/* Waste request details */}
         {selectedRequest && (
-          <div className="mt-8 w-full max-w-md bg-white p-4 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Assign Driver</h2>
-            <p className="mb-4">Waste Code: {selectedRequest.wasteCode}</p>
-            <p className="mb-4">Street: {selectedRequest.location.address || 'N/A'}</p>
+          <div className="mt-8 w-full max-w-md bg-white p-4 rounded-lg shadow-md">
+            <h2 className="text-xl font-bold text-[#175E5E] mb-4">Assign Driver</h2>
+            <p className="mb-4 text-gray-700">Waste Code: {selectedRequest.wasteCode}</p>
+            <p className="mb-4 text-gray-700">Street: {selectedRequest.location.address || 'N/A'}</p>
 
             <div className="mb-4">
               <label htmlFor="street" className="block mb-1 font-semibold text-gray-700">Street Name:</label>
@@ -128,6 +175,13 @@ const AdminHomePage = () => {
             />
           </div>
         )}
+
+        <div className="bg-white shadow-lg rounded-lg p-6 mb-8 mt-12 w-full max-w-4xl">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-6">Waste Collection Over Time</h2>
+          <div className="h-80">
+            <Line data={wasteData} options={chartOptions} />
+          </div>
+        </div>
       </main>
 
       <Footer />

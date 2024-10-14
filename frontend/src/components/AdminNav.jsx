@@ -31,7 +31,7 @@ const AdminNav = () => {
           {/* Links (hidden on mobile, visible on large screens) */}
           <div className="hidden md:flex space-x-4">
             <Link
-              to="/"
+              to="/AdminHomePage"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
               Home

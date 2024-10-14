@@ -14,6 +14,7 @@ const wasteRequestSchema = new Schema(
           "Hazardous Waste",
           "Plastic Waste",
           "Recycle Waste",
+          "Metal Waste",
         ],
         required: true,
       },
