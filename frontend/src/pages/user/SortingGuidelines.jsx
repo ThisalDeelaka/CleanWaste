@@ -51,10 +51,11 @@ const SortingGuidelines = () => {
     if (currentWasteIndex < selectedWasteTypes.length - 1) {
       setCurrentWasteIndex(currentWasteIndex + 1);
     } else {
-      alert('You have reviewed all the guidelines.');
-      navigate('/'); 
+      // Navigate to CreateWasteRequest and pass selectedWasteTypes
+      navigate('/create-waste-request', { state: { selectedWasteTypes } });
     }
   };
+  
 
   // Handle "Back" button
   const handleBack = () => {
