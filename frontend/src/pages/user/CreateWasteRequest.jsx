@@ -9,10 +9,11 @@ import { useAuth } from "../../context/AuthContext";
 
 const CreateWasteRequest = () => {
   const location = useLocation();
-  const { selectedWasteTypes } = location.state || {}; // Safely destructure selectedWasteTypes
-  const [pickupLocation, setPickupLocation] = useState(null); // Pickup location (latitude, longitude)
-  const { auth } = useAuth(); // Get the authenticated user
+  const { selectedWasteTypes } = location.state || {};
+  const [pickupLocation, setPickupLocation] = useState(null);
+  const { auth } = useAuth();
   const navigate = useNavigate();
+  const [qrCode, setQrCode] = useState(null); // State to store the QR code
 
   // Handle creating the waste request
   const handleCreateRequest = async () => {
@@ -20,25 +21,18 @@ const CreateWasteRequest = () => {
       alert("Please select a location for waste pickup.");
       return;
     }
-  
+
     try {
       const response = await cleanWasteAPI.post("/waste-requests/create", {
         wasteType: selectedWasteTypes,
         location: pickupLocation,
-        userId: auth.user._id, // User ID from the authenticated user
+        userId: auth.user._id,
       });
-  
       console.log("Waste request created:", response.data);
       alert("Waste request created successfully!");
-  
-      // If the response contains a QR code (base64), you can display it
-      const qrCode = response.data.qrCode;
-      if (qrCode) {
-        const qrCodeWindow = window.open();
-        qrCodeWindow.document.write(`<img src="${qrCode}" alt="QR Code"/>`);
-      }
-  
-      navigate("/"); // Redirect user to home after successful request
+
+      // Set the QR code from the response to state
+      setQrCode(response.data.qrCode);
     } catch (error) {
       console.error("Error creating waste request:", error);
       alert("Failed to create waste request. Please try again.");
@@ -61,6 +55,14 @@ const CreateWasteRequest = () => {
     );
   }
 
+  // Function to download the QR code
+  const handleDownloadQrCode = () => {
+    const a = document.createElement("a");
+    a.href = qrCode;
+    a.download = "waste-request-qr-code.png";
+    a.click();
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
@@ -78,27 +80,38 @@ const CreateWasteRequest = () => {
 
         {/* Map Component for Selecting Pickup Location */}
         <div className="w-full max-w-4xl mx-auto mb-4">
-          {" "}
-          {/* Reduced margin here */}
           <Map onLocationSelect={setPickupLocation} />
         </div>
 
         {/* Buttons Container */}
         <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
-          {/* Back Button */}
           <Button
             text="Back"
-            onClick={() => navigate(-1)} // Navigates back to the previous page
+            onClick={() => navigate(-1)}
             className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg shadow-lg transition duration-300"
           />
-
-          {/* Confirm Waste Request Button */}
           <Button
             text="Confirm Waste Request"
             onClick={handleCreateRequest}
             className="px-8 py-3 bg-[#175E5E] text-white font-semibold rounded-lg shadow-lg hover:bg-[#134c4c] transform hover:scale-105 transition duration-300"
           />
         </div>
+
+        {/* Display QR Code and Download Button if QR Code is available */}
+        {qrCode && (
+          <div className="mt-8 text-center">
+            <h2 className="text-xl font-bold mb-4">
+              Your Waste Request QR Code
+            </h2>
+            <img src={qrCode} alt="QR Code" className="mb-4" />
+
+            <Button
+              text="Download QR Code"
+              onClick={handleDownloadQrCode}
+              className="px-6 py-3 bg-[#175E5E] text-white font-semibold rounded-lg shadow-lg hover:bg-[#134c4c] transform hover:scale-105 transition duration-300"
+            />
+          </div>
+        )}
       </main>
 
       <Footer />
