@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import cleanWasteAPI from "../../api/cleanWasteAPI";
+
 import MapComponent from "../../components/MapComponent"; // Import the MapComponent
-import Navbar from "../../components/DriverNavbar"; // Import Navbar
+import DriverNavbar from "../../components/DriverNavbar"; // Import Navbar
 import Footer from "../../components/Footer"; // Import Footer
 import { FaCheckCircle, FaTasks } from "react-icons/fa"; // Import icons
 import { Menu, Dropdown, Button } from "antd"; // Using Ant Design dropdown
@@ -126,7 +127,7 @@ const PickupRequests = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      <Navbar />
+      <DriverNavbar />
 
       {/* Dropdown for Driver Tasks */}
       <div className="flex justify-end pr-8 pt-4">
