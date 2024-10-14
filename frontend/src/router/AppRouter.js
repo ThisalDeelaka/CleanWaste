@@ -8,6 +8,7 @@ import DriverHome from "../pages/driver/driverHomePage";
 import WasteTypeSelection from "../pages/user/WasteTypeSelection";
 import SortingGuidelines from "../pages/user/SortingGuidelines";
 import CreateWasteRequest from '../pages/user/CreateWasteRequest';
+import AdminHomePage from '../pages/admin/AdminHomePage';
 
 // import Dashboard from '../pages/Dashboard';
 
@@ -25,6 +26,7 @@ const AppRouter = () => (
       <Route path="/selection" element={<WasteTypeSelection />} />
       <Route path="/sorting-guidelines" element={<SortingGuidelines />} />
       <Route path="/create-waste-request" element={<CreateWasteRequest />} />
+      <Route path="/AdminHomePage" element={<AdminHomePage />} />
       {/* <Route path="/dashboard" element={<Dashboard />} /> */}
 
     </Routes>
