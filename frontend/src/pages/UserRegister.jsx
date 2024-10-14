@@ -65,6 +65,15 @@ const UserRegister = () => {
     setShowPassword(!showPassword);
   };
 
+  // Hardcoded list of street names
+  const streetOptions = [
+    'Vihara Road',
+    'Waliwita Road',
+    'E.A. Jayasinghe Road',
+    'Gamunu Pura',
+    'Samanala Pedesa'
+  ];
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#175E5E]">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md mx-4">
@@ -107,14 +116,26 @@ const UserRegister = () => {
           </div>
 
           {/* Address Fields */}
-          <InputField
-            label="Street"
-            value={formData.address.street}
-            onChange={handleChange}
-            placeholder="Enter your street"
-            name="address.street"
-            className="w-full border border-gray-300 p-2 rounded-md"
-          />
+          <div className="mb-4">
+            <label htmlFor="street" className="block text-gray-700 font-semibold mb-2">
+              Select Street:
+            </label>
+            <select
+              id="street"
+              name="address.street"
+              value={formData.address.street}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="">Select a street</option>
+              {streetOptions.map((street, index) => (
+                <option key={index} value={street}>
+                  {street}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <InputField
             label="City"
             value={formData.address.city}
