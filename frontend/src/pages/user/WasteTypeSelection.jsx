@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../../components/Navbar'; 
+import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import Button from '../../components/Button'; 
 import { useNavigate } from 'react-router-dom';
@@ -35,8 +35,22 @@ const WasteTypeSelection = () => {
     }
   };
 
+  // Inline style for light grey grid background
+  const gridBackgroundStyle = {
+    backgroundImage: `
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px)
+    `,
+    backgroundSize: '10px 10px', // Smaller grid size
+    width: '100%',
+    height: '100vh', // Full-screen grid background
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div
+      className="flex flex-col min-h-screen bg-gray-100"
+      style={gridBackgroundStyle}
+    >
       <Navbar />
 
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-6 sm:py-12">

@@ -6,8 +6,19 @@ import Sidebar from './Sidebar';  // Import Sidebar component
 const Membership = () => {
   const [billingCycle, setBillingCycle] = useState('monthly'); // State to track billing cycle
 
+  // Inline style for light grey grid background
+  const gridBackgroundStyle = {
+    backgroundImage: `
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px)
+    `,
+    backgroundSize: '10px 10px', // Smaller grid size
+    width: '100%',
+    minHeight: '100vh', // Full-screen grid background
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" style={gridBackgroundStyle}>
       {/* Navbar remains on top */}
       <Navbar />
 
