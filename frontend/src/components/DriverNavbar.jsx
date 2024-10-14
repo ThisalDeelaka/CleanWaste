@@ -82,7 +82,7 @@ const DriverNavbar = () => {
               Recycling Center
             </Link>
             <Link
-              to="/driver/recycling-center"
+              to="/driverNotifications"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
               Notifications
