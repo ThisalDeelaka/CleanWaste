@@ -58,24 +58,35 @@ const Recycling = () => {
     return () => clearInterval(interval);  // Cleanup the interval on component unmount
   }, [finalRevenue]);
 
+  // Inline style for light grey grid background (responsive)
+  const gridBackgroundStyle = {
+    backgroundImage: `
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px)
+    `,
+    backgroundSize: '10px 10px', // Smaller grid size
+    width: '100%',
+    minHeight: '100vh', // Full-screen grid background
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-100" style={gridBackgroundStyle}>
       {/* Navbar remains on top */}
       <Navbar />
 
-      <div className="flex flex-1">
-        {/* Sidebar for larger screens */}
-        <Sidebar />
+      <div className="flex flex-1 flex-col lg:flex-row">
+        {/* Sidebar is hidden on smaller screens */}
+        <Sidebar className="hidden lg:block" />
 
         {/* Main content */}
-        <main className="flex-1 p-4 lg:ml-56"> {/* Margin adjusted to align with sidebar */}
-          <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-4">Recycling Overview</h1>
+        <main className="flex-1 p-4 lg:ml-56">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 text-center mb-4">Recycling Overview</h1>
           <p className="text-gray-600 text-center mb-6">
             Here is your waste and recycling data along with your revenue from recycling activities.
           </p>
 
           {/* Recycling and Waste Data */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {/* Waste Percentage */}
             <div className="bg-gray-100 shadow-md rounded-lg p-6 border border-gray-300">
               <h2 className="text-gray-600 text-sm font-bold uppercase mb-2">Waste Generated</h2>
@@ -99,10 +110,10 @@ const Recycling = () => {
           </div>
 
           {/* Waste and Recycling Chart */}
-          <div className="max-w-4xl mx-auto mt-12">
+          <div className="max-w-4xl mx-auto mt-8">
             <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">Waste vs Recycling Breakdown</h2>
             <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200">
-              <div className="relative" style={{ height: '400px' }}> {/* Limit chart height */}
+              <div className="relative" style={{ height: '300px' }}> {/* Reduced height for mobile responsiveness */}
                 <Pie data={chartData} options={chartOptions} />
               </div>
             </div>

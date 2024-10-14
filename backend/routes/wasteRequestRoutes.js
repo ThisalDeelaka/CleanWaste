@@ -13,7 +13,7 @@ router.post('/assign-driver', authMiddleware.verifyToken, authMiddleware.isAdmin
 // Mark waste as picked up (driver-specific)
 router.post('/mark-picked-up', authMiddleware.verifyToken, authMiddleware.isDriver, wasteRequestController.markAsPickedUp);
 
-router.get('/user/:userId', authMiddleware.verifyToken, wasteRequestController.getUserWasteRequests);
+router.get('/user/:userId', wasteRequestController.getUserWasteRequests);
 
 
 module.exports = router;
