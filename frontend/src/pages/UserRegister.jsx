@@ -15,6 +15,7 @@ const UserRegister = () => {
       city: '',
       postalCode: '',
     },
+    role: 'user', // Default role is user
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -64,10 +65,19 @@ const UserRegister = () => {
     setShowPassword(!showPassword);
   };
 
+  // Hardcoded list of street names
+  const streetOptions = [
+    'Vihara Road',
+    'Waliwita Road',
+    'E.A. Jayasinghe Road',
+    'Gamunu Pura',
+    'Samanala Pedesa'
+  ];
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#175E5E]">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md mx-4">
-        <h1 className="text-3xl font-bold text-center text-[#175E5E] mb-6">User Registration</h1>
+        <h1 className="text-3xl font-bold text-center text-[#175E5E] mb-6">User/Driver Registration</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <InputField
             label="Name"
@@ -106,14 +116,26 @@ const UserRegister = () => {
           </div>
 
           {/* Address Fields */}
-          <InputField
-            label="Street"
-            value={formData.address.street}
-            onChange={handleChange}
-            placeholder="Enter your street"
-            name="address.street"
-            className="w-full border border-gray-300 p-2 rounded-md"
-          />
+          <div className="mb-4">
+            <label htmlFor="street" className="block text-gray-700 font-semibold mb-2">
+              Select Street:
+            </label>
+            <select
+              id="street"
+              name="address.street"
+              value={formData.address.street}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="">Select a street</option>
+              {streetOptions.map((street, index) => (
+                <option key={index} value={street}>
+                  {street}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <InputField
             label="City"
             value={formData.address.city}
@@ -130,6 +152,23 @@ const UserRegister = () => {
             name="address.postalCode"
             className="w-full border border-gray-300 p-2 rounded-md"
           />
+
+          {/* Role Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="role" className="block text-gray-700 font-semibold mb-2">
+              Select Role:
+            </label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="user">User</option>
+              <option value="driver">Driver</option>
+            </select>
+          </div>
 
           <Button
             text="Register"

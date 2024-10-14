@@ -13,8 +13,7 @@ const defaultCenter = {
   lng: 80.7718,
 };
 
-const Map = ({ onLocationSelect }) => {
-  const [markerPosition, setMarkerPosition] = useState(defaultCenter); // Marker position
+const Map = ({ wasteRequests, onRequestSelect }) => {
   const [center, setCenter] = useState(defaultCenter); // Map center position
 
   // Load Google Maps API
@@ -29,26 +28,13 @@ const Map = ({ onLocationSelect }) => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setCenter({ lat: latitude, lng: longitude });
-          setMarkerPosition({ lat: latitude, lng: longitude });
-          onLocationSelect({ latitude, longitude });
         },
         (error) => {
           console.error("Error getting location: ", error);
         }
       );
     }
-  }, [onLocationSelect]);
-
-  // Handle map click to update marker position
-  const onMapClick = useCallback(
-    (event) => {
-      const lat = event.latLng.lat();
-      const lng = event.latLng.lng();
-      setMarkerPosition({ lat, lng });
-      onLocationSelect({ latitude: lat, longitude: lng });
-    },
-    [onLocationSelect]
-  );
+  }, []);
 
   if (!isLoaded) {
     return <div>Loading Map...</div>;
@@ -59,9 +45,15 @@ const Map = ({ onLocationSelect }) => {
       mapContainerStyle={containerStyle}
       center={center}
       zoom={12} // Zoom level when showing user's location
-      onClick={onMapClick} // Update marker on map click
     >
-      {markerPosition && <Marker position={markerPosition} />}
+      {/* Display markers for all waste requests */}
+      {wasteRequests.map((request, index) => (
+        <Marker
+          key={index}
+          position={{ lat: request.location.latitude, lng: request.location.longitude }}
+          onClick={() => onRequestSelect(request)} // Select request on marker click
+        />
+      ))}
     </GoogleMap>
   );
 };

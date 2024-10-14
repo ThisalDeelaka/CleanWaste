@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; 
-import Navbar from '../../components/Navbar'; 
+import { useLocation, useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import Button from '../../components/Button'; 
+import Button from '../../components/Button';
 
 const guidelinesData = {
   'Organic Waste': [
@@ -39,7 +39,7 @@ const guidelinesData = {
 
 const SortingGuidelines = () => {
   const location = useLocation();
-  const { selectedWasteTypes } = location.state; 
+  const { selectedWasteTypes } = location.state;
   const [currentWasteIndex, setCurrentWasteIndex] = useState(0);
   const navigate = useNavigate();
 
@@ -55,7 +55,6 @@ const SortingGuidelines = () => {
       navigate('/create-waste-request', { state: { selectedWasteTypes } });
     }
   };
-  
 
   // Handle "Back" button
   const handleBack = () => {
@@ -64,21 +63,35 @@ const SortingGuidelines = () => {
     }
   };
 
+  // Inline style for even lighter grey grid background
+  const gridBackgroundStyle = {
+    backgroundImage: `
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px)
+    `,
+    backgroundSize: '10px 10px', // Smaller grid size
+    width: '100%',
+    height: '100vh', // Full-screen grid background
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div
+      className="flex flex-col min-h-screen bg-gray-100 transition-colors duration-300"
+      style={gridBackgroundStyle}
+    >
       <Navbar />
 
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-6 sm:py-12">
         {/* Step Indicator */}
-        <div className="w-full max-w-lg sm:max-w-xl mb-4">
+        <div className="w-full max-w-lg sm:max-w-xl mb-6">
           <div className="relative w-full h-2 bg-gray-300 rounded-full">
-            <div className="absolute top-0 left-0 h-full bg-[#175E5E]" 
+            <div className="absolute top-0 left-0 h-full bg-[#175E5E]"
                  style={{ width: `${((currentWasteIndex + 1) / selectedWasteTypes.length) * 100}%` }}></div>
           </div>
           <p className="text-sm text-[#175E5E] text-center mt-2">Step 2 of 2: Sorting Guidelines</p>
         </div>
 
-        <h1 className="text-4xl font-bold text-[#175E5E] mb-6 text-center leading-snug">
+        <h1 className="text-4xl font-extrabold text-[#175E5E] mb-6 text-center leading-snug">
           Sorting Guidelines for {currentWasteType}
         </h1>
 

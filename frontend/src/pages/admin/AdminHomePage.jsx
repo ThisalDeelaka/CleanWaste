@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import cleanWasteAPI from '../../api/cleanWasteAPI'; // Ensure your API setup is correct
+import cleanWasteAPI from '../../api/cleanWasteAPI';
 import Navbar from '../../components/Navbar'; 
 import Footer from '../../components/Footer';
-import Map from '../../components/Map'; // Assuming you have a map component
+import Map from '../../components/Map'; 
 import Button from '../../components/Button';
+import AdminNav from '../../components/AdminNav';
 
 const AdminHomePage = () => {
   const [wasteRequests, setWasteRequests] = useState([]); // All waste requests
@@ -14,12 +15,13 @@ const AdminHomePage = () => {
   const [streetName, setStreetName] = useState(''); // Street name input
   const navigate = useNavigate();
 
-  // Fetch waste requests for the map and available drivers
+  // Fetch waste requests for the map and drivers
   useEffect(() => {
     const fetchWasteRequests = async () => {
       try {
-        const response = await cleanWasteAPI.get('/admin/all-waste-requests'); // Fetch all waste requests
+        const response = await cleanWasteAPI.get('/waste-requests/all-waste-requests'); // Fetch all waste requests
         setWasteRequests(response.data);
+        console.log('Waste requests:', response.data);
       } catch (error) {
         console.error('Error fetching waste requests:', error);
       }
@@ -27,7 +29,7 @@ const AdminHomePage = () => {
     
     const fetchDrivers = async () => {
       try {
-        const response = await cleanWasteAPI.get('/drivers'); // Fetch drivers list
+        const response = await cleanWasteAPI.get('/api/drivers'); // Fetch drivers list
         setDrivers(response.data);
       } catch (error) {
         console.error('Error fetching drivers:', error);
@@ -46,7 +48,7 @@ const AdminHomePage = () => {
     }
 
     try {
-      const response = await cleanWasteAPI.post('/admin/assign-driver', {
+      const response = await cleanWasteAPI.post('/api/waste-requests/assign-driver', {
         requestId: selectedRequest._id,
         driverId: selectedDriver,
         streetName,
@@ -64,13 +66,12 @@ const AdminHomePage = () => {
 
   // Handle selecting a waste request on the map
   const handleWasteRequestSelect = (request) => {
-    setSelectedRequest(request);
+    setSelectedRequest(request); // Set the selected request for assignment
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <Navbar />
-
+      <AdminNav />
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-6 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#175E5E] mb-8 text-center">
           Admin Dashboard
@@ -78,9 +79,11 @@ const AdminHomePage = () => {
 
         {/* Display Waste Requests on the Map */}
         <Map
-          wasteRequests={wasteRequests}
+          wasteRequests={wasteRequests} // Pass waste requests to map
           onRequestSelect={handleWasteRequestSelect} // Function to set the selected request
+
         />
+
 
         {/* Waste request details */}
         {selectedRequest && (

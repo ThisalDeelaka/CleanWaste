@@ -8,13 +8,16 @@ const register = async (req, res) => {
   try {
     const { name, email, password, role, address } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Create a new user (or driver depending on role)
     const user = await userService.registerUser({
       name,
       email,
       password: hashedPassword,
-      role,
+      role, // Role will be either 'user' or 'driver'
       address,
     });
+
     res.status(201).json({ message: "User registered", user });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -62,8 +65,20 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+// controllers/userController.js
+
+const getAllDrivers = async (req, res) => {
+  try {
+    const drivers = await userService.findUsersByRole('driver');
+    res.json(drivers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   getUserProfile,
+  getAllDrivers,
 };

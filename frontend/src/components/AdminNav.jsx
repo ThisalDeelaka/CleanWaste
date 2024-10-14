@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaUser, FaBell } from "react-icons/fa"; // Importing notification icon (FaBell)
+import { FaBars, FaTimes } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext"; // Importing the useAuth context
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState(3); // Notification count (example)
-  const { auth, logout } = useAuth(); // Accessing auth (user and token) and logout from AuthContext
-  const navigate = useNavigate();
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleLogout = () => {
-    logout(); // Logout the user
-    navigate("/"); // Redirect to home page after logout
-  };
+const AdminNav = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const { auth, logout } = useAuth(); // Accessing auth (user and token) and logout from AuthContext
+    const navigate = useNavigate();
+  
+    const toggleMenu = () => {
+      setIsOpen(!isOpen);
+    };
+  
+    const handleLogout = () => {
+      logout(); // Logout the user
+      navigate("/"); // Redirect to home page after logout
+    };
 
   return (
     <nav className="bg-[#0c343d] text-white sticky top-0 z-50">
@@ -30,7 +29,7 @@ const Navbar = () => {
           </div>
 
           {/* Links (hidden on mobile, visible on large screens) */}
-          <div className="hidden md:flex space-x-4 items-center">
+          <div className="hidden md:flex space-x-4">
             <Link
               to="/"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
@@ -38,10 +37,10 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              to="/about"
+              to="/driverAssign"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
-              About
+              driver assign
             </Link>
             <Link
               to="/services"
@@ -56,34 +55,14 @@ const Navbar = () => {
               Contact
             </Link>
 
-            {/* Notification Icon with Badge */}
-            <div className="relative">
-              <Link to="/Notifications"> {/* Navigate to the Notifications page when clicked */}
-                <FaBell size={24} className="hover:text-yellow-400" />
-                {notifications > 0 && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    {notifications}
-                  </span>
-                )}
-              </Link>
-            </div>
-
             {/* Conditionally show Login/Sign Up or Logout based on auth.user */}
             {auth?.user ? (
-              <>
-                <Link to="/profile" className="text-white hover:text-yellow-400">
-                  {/* Profile Icon with a Circle */}
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-yellow-400 p-1 hover:border-yellow-300 transition-all duration-200">
-                    <FaUser size={24} />
-                  </div>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="px-3 py-2 bg-red-500 rounded-md text-sm font-medium hover:bg-red-600 transition-all duration-200"
-                >
-                  Logout
-                </button>
-              </>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-2 bg-red-500 rounded-md text-sm font-medium hover:bg-red-600 transition-all duration-200"
+              >
+                Logout
+              </button>
             ) : (
               <>
                 <Link
@@ -145,24 +124,15 @@ const Navbar = () => {
 
               {/* Conditionally show Login/Sign Up or Logout */}
               {auth?.user ? (
-                <>
-                  <Link
-                    to="/profile"
-                    onClick={toggleMenu}
-                    className="block hover:text-yellow-400 hover:bg-[#134c4c] px-3 py-2 rounded-md text-base font-medium"
-                  >
-                    Profile
-                  </Link>
-                  <button
-                    onClick={() => {
-                      toggleMenu();
-                      handleLogout();
-                    }}
-                    className="px-3 py-2 bg-[#ffe599] rounded-md text-sm font-medium hover:bg-yellow-300 transition-all duration-200"
-                  >
-                    Logout
-                  </button>
-                </>
+                <button
+                  onClick={() => {
+                    toggleMenu();
+                    handleLogout();
+                  }}
+                  className="px-3 py-2 bg-[#ffe599] rounded-md text-sm font-medium hover:bg-yellow-300 transition-all duration-200"
+                >
+                  Logout
+                </button>
               ) : (
                 <>
                   <Link
@@ -186,7 +156,7 @@ const Navbar = () => {
         )}
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default AdminNav

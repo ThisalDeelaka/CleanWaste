@@ -9,7 +9,7 @@ import Button from "../components/Button";
 const UserLogin = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
+  const { login } = useAuth();  // Context to store the user and token
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -31,8 +31,21 @@ const UserLogin = () => {
       console.log("Login Response:", response.data);
 
       if (response.data.user && response.data.token) {
-        login(response.data.user, response.data.token); // Store user and token in context
-        navigate("/"); // Redirect to home after login
+        const { user, token } = response.data;
+
+        // Store user and token in context (or localStorage as fallback)
+        login(user, token);
+        localStorage.setItem("role", user.role); // Store user role in localStorage
+        localStorage.setItem("token", token);
+
+        // Navigate based on user role
+        if (user.role === "admin") {
+          navigate("/AdminHomePage");  // Navigate to admin dashboard
+        } else if (user.role === "driver") {
+          navigate("/driverHomePage");  // Navigate to driver dashboard
+        } else {
+          navigate("/");  // Navigate to home page for regular users
+        }
       } else {
         alert("Invalid login response. Please try again.");
       }

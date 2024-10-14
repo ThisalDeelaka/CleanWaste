@@ -30,9 +30,15 @@ const getAllWasteRequests = async () => {
   return await WasteRequest.find().populate('user assignedDriver');  // Optionally, populate user and driver details
 };
 
+const getWasteRequestsByUserId = async (userId) => {
+  return await WasteRequest.find({ user: userId }); // Find all waste requests for the given user
+};
+
+
 module.exports = {
   createWasteRequest,
   assignDriverToWasteRequest,
   markWasteAsPickedUp,
-  getAllWasteRequests  // Export the new function
+  getAllWasteRequests,
+  getWasteRequestsByUserId  
 };

@@ -11,41 +11,52 @@ const HomePage = () => {
     navigate('/selection'); // Navigate to '/selection' when clicked
   };
 
+  // Inline style for light white grid background
+  const gridBackgroundStyle = {
+    backgroundImage: `
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
+    `,
+    backgroundSize: '10px 10px', // Smaller grid size
+    width: '100%',
+    minHeight: '100vh', // Full-screen grid background
+  };
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen" style={gridBackgroundStyle}>
       {/* Navbar */}
       <Navbar />
 
       {/* Hero Section */}
       <main className="flex flex-col items-center justify-center flex-grow bg-gradient-to-b from-[#175E5E] to-[#134c4c] text-white px-4 py-8">
         <div className="text-center p-6 max-w-4xl">
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
             Welcome to <span className="text-yellow-400">ClearWaste</span>
           </h1>
-          <p className="text-lg sm:text-2xl mt-4 leading-relaxed">
+          <p className="text-md sm:text-lg lg:text-2xl mt-4 leading-relaxed">
             The future of smart waste management, designed to make your life easier and the environment cleaner.
           </p>
 
           {/* Call to Action Buttons */}
           <div className="mt-8 flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-6 justify-center">
             <button
-              className="px-8 py-4 bg-yellow-400 text-[#175E5E] font-semibold rounded-lg shadow-lg hover:bg-yellow-300 hover:shadow-xl transition-all duration-300"
+              className="px-6 py-3 sm:px-8 sm:py-4 bg-yellow-400 text-[#175E5E] font-semibold rounded-lg shadow-lg hover:bg-yellow-300 hover:shadow-xl transition-all duration-300"
               onClick={handleGetStartedClick} // Navigate to '/selection' when clicked
             >
               Get Started
             </button>
-            <button className="px-8 py-4 bg-transparent text-white border border-white font-semibold rounded-lg hover:bg-white hover:text-[#175E5E] transition-all duration-300">
+            <button className="px-6 py-3 sm:px-8 sm:py-4 bg-transparent text-white border border-white font-semibold rounded-lg hover:bg-white hover:text-[#175E5E] transition-all duration-300">
               Learn More
             </button>
           </div>
         </div>
 
         {/* Features Section */}
-        <div className="bg-white py-12 px-6 w-full sm:w-3/4 lg:w-1/2 shadow-xl rounded-lg mt-16 text-gray-800">
-          <h2 className="text-2xl sm:text-4xl font-bold text-center text-[#175E5E] mb-8">
+        <div className="bg-white py-8 sm:py-12 px-6 w-full sm:w-3/4 lg:w-1/2 shadow-xl rounded-lg mt-12 sm:mt-16 text-gray-800">
+          <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-center text-[#175E5E] mb-6 sm:mb-8">
             Why Choose ClearWaste?
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
             <div className="flex items-start">
               <span className="mr-3 text-[#175E5E]">✔</span>
               AI-powered waste collection scheduling for ultimate convenience.
@@ -65,6 +76,60 @@ const HomePage = () => {
           </div>
         </div>
       </main>
+
+      {/* Banner Section with Updated Content */}
+      <section className="bg-[#175E5E] py-6 px-4 text-center">
+        <p className="text-md sm:text-lg font-semibold text-white">
+          Join us today in making the world cleaner. Take action now by recycling your waste!
+        </p>
+        <button className="mt-3 px-6 py-2 border border-white text-white font-semibold rounded-lg hover:bg-white hover:text-[#175E5E] transition-all duration-300">
+          Get Involved
+        </button>
+      </section>
+
+      {/* Process Section - Improved "How It Works" Design */}
+      <section className="py-10 sm:py-16 px-6 sm:px-8 bg-gray-50">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-[#175E5E] mb-10 sm:mb-16">
+          How It Works
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 text-center">
+          <div className="space-y-4">
+            <h3 className="text-3xl sm:text-4xl font-bold text-green-500">01.</h3>
+            <h4 className="text-xl sm:text-2xl font-semibold">Select Waste Type</h4>
+            <p className="text-gray-500 leading-relaxed text-sm sm:text-base">
+              Choose the type of waste you are disposing of from our easy-to-use options.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-3xl sm:text-4xl font-bold text-green-500">02.</h3>
+            <h4 className="text-xl sm:text-2xl font-semibold">Schedule Pickup</h4>
+            <p className="text-gray-500 leading-relaxed text-sm sm:text-base">
+              Schedule a pickup at your convenience with real-time tracking options available.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-3xl sm:text-4xl font-bold text-green-500">03.</h3>
+            <h4 className="text-xl sm:text-2xl font-semibold">Track Your Waste</h4>
+            <p className="text-gray-500 leading-relaxed text-sm sm:text-base">
+              Get real-time updates as your waste is collected and processed for recycling.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-3xl sm:text-4xl font-bold text-green-500">04.</h3>
+            <h4 className="text-xl sm:text-2xl font-semibold">Earn Rewards</h4>
+            <p className="text-gray-500 leading-relaxed text-sm sm:text-base">
+              Earn rewards for every pickup as part of our eco-friendly incentive program.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-3xl sm:text-4xl font-bold text-green-500">05.</h3>
+            <h4 className="text-xl sm:text-2xl font-semibold">Make a Difference</h4>
+            <p className="text-gray-500 leading-relaxed text-sm sm:text-base">
+              Join the movement for a cleaner planet by participating in our smart waste management system.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <Footer />
