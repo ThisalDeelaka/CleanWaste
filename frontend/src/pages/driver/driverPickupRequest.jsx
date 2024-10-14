@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import cleanWasteAPI from "../../api/cleanWasteAPI";
+import MapComponent from "../../components/MapComponent"; // Import the new MapComponent
 
 const PickupRequests = () => {
   const [searchParams] = useSearchParams();
@@ -53,6 +54,12 @@ const PickupRequests = () => {
                 >
                   Status: {request.status}
                 </p>
+
+                {/* Include the MapComponent for each waste request */}
+                <MapComponent
+                  latitude={request.location.latitude}
+                  longitude={request.location.longitude}
+                />
               </li>
             ))}
           </ul>
