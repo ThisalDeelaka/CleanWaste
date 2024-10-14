@@ -13,8 +13,9 @@ import Membership from '../pages/user/profile/Membership';
 import Recycling from '../pages/user/profile/Recycling';
 import AdminHomePage from '../pages/admin/AdminHomePage';
 import DriverAssignPage from "../pages/admin/DriverAssignPage";
-import UserNotification from "../pages/user/UserNotification";
+import UserNotification from "../pages/user/profile/UserNotification";
 import DriverNotification from "../pages/driver/DriverNotification";
+import WasteRequestConfirmation from "../pages/user/WasteRequestConfirmation";
 
 // import Dashboard from '../pages/Dashboard';
 
@@ -32,6 +33,7 @@ const AppRouter = () => (
       <Route path="/Profile" element={<ProfilePage />} />
       <Route path="/Membership" element={<Membership />} />
       <Route path="/recycling" element={<Recycling />} />
+      <Route path="/confirmation" element={<WasteRequestConfirmation />} />
      {/* driver routes */}
       <Route path="/driverHomePage" element={<DriverHome />} />
         {/* admin routes */}

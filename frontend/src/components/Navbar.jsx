@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaUser } from "react-icons/fa"; // Import FaUser for the profile icon
+import { FaBars, FaTimes, FaUser, FaBell } from "react-icons/fa"; // Importing notification icon (FaBell)
 import { useAuth } from "../context/AuthContext"; // Importing the useAuth context
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [notifications, setNotifications] = useState(3); // Notification count (example)
   const { auth, logout } = useAuth(); // Accessing auth (user and token) and logout from AuthContext
   const navigate = useNavigate();
 
@@ -54,6 +55,18 @@ const Navbar = () => {
             >
               Contact
             </Link>
+
+            {/* Notification Icon with Badge */}
+            <div className="relative">
+              <Link to="/Notifications"> {/* Navigate to the Notifications page when clicked */}
+                <FaBell size={24} className="hover:text-yellow-400" />
+                {notifications > 0 && (
+                  <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {notifications}
+                  </span>
+                )}
+              </Link>
+            </div>
 
             {/* Conditionally show Login/Sign Up or Logout based on auth.user */}
             {auth?.user ? (

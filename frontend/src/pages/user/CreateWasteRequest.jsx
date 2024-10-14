@@ -4,7 +4,7 @@ import cleanWasteAPI from "../../api/cleanWasteAPI";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Button from "../../components/Button";
-import Map from "../../components/Map";
+import Map from "../../components/userMap";
 import { useAuth } from "../../context/AuthContext";
 
 const CreateWasteRequest = () => {
@@ -13,7 +13,9 @@ const CreateWasteRequest = () => {
   const [pickupLocation, setPickupLocation] = useState(null);
   const { auth } = useAuth();
   const navigate = useNavigate();
-  const [qrCode, setQrCode] = useState(null); // State to store the QR code
+  const [qrCode, setQrCode] = useState(null);
+  const [wasteCode, setWasteCode] = useState(null); // State to store the Waste Code
+  const [loading, setLoading] = useState(false);
 
   // Handle creating the waste request
   const handleCreateRequest = async () => {
@@ -31,8 +33,12 @@ const CreateWasteRequest = () => {
       console.log("Waste request created:", response.data);
       alert("Waste request created successfully!");
 
-      // Set the QR code from the response to state
+      // Set the QR code and waste code from the response to state
       setQrCode(response.data.qrCode);
+      setWasteCode(response.data.wasteCode); // Assuming the response contains a wasteCode
+
+      // Navigate to the confirmation page
+      navigate("/confirmation", { state: { qrCode: response.data.qrCode, wasteCode: response.data.wasteCode } });
     } catch (error) {
       console.error("Error creating waste request:", error);
       alert("Failed to create waste request. Please try again.");
@@ -91,7 +97,13 @@ const CreateWasteRequest = () => {
 
         {/* Map Component for Selecting Pickup Location */}
         <div className="w-full max-w-4xl mx-auto mb-4">
-          <Map onLocationSelect={setPickupLocation} />
+          {loading ? (
+            <div className="flex items-center justify-center h-48">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#175E5E]"></div>
+            </div>
+          ) : (
+            <Map onLocationSelect={setPickupLocation} setLoading={setLoading} />
+          )}
         </div>
 
         {/* Buttons Container */}
@@ -107,22 +119,6 @@ const CreateWasteRequest = () => {
             className="px-8 py-3 bg-[#175E5E] text-white font-semibold rounded-lg shadow-lg hover:bg-[#134c4c] transform hover:scale-105 transition duration-300"
           />
         </div>
-
-        {/* Display QR Code and Download Button if QR Code is available */}
-        {qrCode && (
-          <div className="mt-8 text-center">
-            <h2 className="text-xl font-bold mb-4">
-              Your Waste Request QR Code
-            </h2>
-            <img src={qrCode} alt="QR Code" className="mb-4" />
-
-            <Button
-              text="Download QR Code"
-              onClick={handleDownloadQrCode}
-              className="px-6 py-3 bg-[#175E5E] text-white font-semibold rounded-lg shadow-lg hover:bg-[#134c4c] transform hover:scale-105 transition duration-300"
-            />
-          </div>
-        )}
       </main>
 
       <Footer />
