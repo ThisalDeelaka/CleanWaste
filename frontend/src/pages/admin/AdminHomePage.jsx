@@ -6,11 +6,7 @@ import Footer from '../../components/Footer';
 import Map from '../../components/Map'; 
 import Button from '../../components/Button';
 import AdminNav from '../../components/AdminNav';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
-// Register necessary chart.js components
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const AdminHomePage = () => {
   const [wasteRequests, setWasteRequests] = useState([]);
@@ -85,29 +81,9 @@ const AdminHomePage = () => {
     setSelectedRequest(request);
   };
 
-  // Data for Waste Collection Line Chart
-  const wasteData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-    datasets: [
-      {
-        label: 'Waste Collected (kg)',
-        data: [30, 45, 60, 50, 80, 70],
-        fill: false,
-        backgroundColor: '#175E5E',
-        borderColor: '#175E5E',
-      }
-    ]
-  };
+  
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  };
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -118,7 +94,6 @@ const AdminHomePage = () => {
           Admin Dashboard
         </h1>
 
-        {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 w-full px-4">
           <div className="bg-white shadow-md rounded-lg p-6 border-l-4 border-[#175E5E]">
             <h2 className="text-xl font-semibold text-[#175E5E]">Total Users</h2>
@@ -134,13 +109,11 @@ const AdminHomePage = () => {
           </div>
         </div>
 
-        {/* Map Component to show waste requests */}
         <Map
           wasteRequests={wasteRequests}
           onRequestSelect={handleWasteRequestSelect}
         />
 
-        {/* Waste request details */}
         {selectedRequest && (
           <div className="mt-8 w-full max-w-md bg-white p-4 rounded-lg shadow-md">
             <h2 className="text-xl font-bold text-[#175E5E] mb-4">Assign Driver</h2>
@@ -184,13 +157,7 @@ const AdminHomePage = () => {
           </div>
         )}
 
-        {/* Waste Collection Line Chart */}
-        <div className="bg-white shadow-lg rounded-lg p-6 mb-8 mt-12 w-full max-w-4xl">
-          <h2 className="text-2xl font-semibold text-gray-700 mb-6">Waste Collection Over Time</h2>
-          <div className="h-80">
-            <Line data={wasteData} options={chartOptions} />
-          </div>
-        </div>
+       
       </main>
 
       <Footer />
