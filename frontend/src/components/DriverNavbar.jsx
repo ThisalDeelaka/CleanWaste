@@ -58,34 +58,30 @@ const DriverNavbar = () => {
               Home
             </Link>
             <Link
+              to="/driverNotifications"
+              className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
+            >
+              Dashboard
+            </Link>
+            <Link
               to="/driver/pickup-requests"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
               Pickup Requests
             </Link>
+
             <Link
               to="/driver/waste-code-entries"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
               Waste Code Entries
             </Link>
-            <Link
-              to="/driver/route-completions"
-              className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
-            >
-              Route Completions
-            </Link>
+
             <Link
               to="/driver/recycling-center"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
               Recycling Center
-            </Link>
-            <Link
-              to="/driverNotifications"
-              className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
-            >
-              Notifications
             </Link>
 
             {/* Notification Bell Icon */}
