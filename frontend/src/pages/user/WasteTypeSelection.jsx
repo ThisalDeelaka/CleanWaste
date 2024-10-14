@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import cleanWasteAPI from '../../api/cleanWasteAPI'; 
+import React, { useState } from 'react';
 import Navbar from '../../components/Navbar'; 
 import Footer from '../../components/Footer';
 import Button from '../../components/Button'; 
 import { useNavigate } from 'react-router-dom';
 
+const wasteTypes = [
+  'Organic Waste',
+  'Paper Waste',
+  'E-waste',
+  'Hazardous Waste',
+  'Plastic Waste',
+  'Recycle Waste'
+];
+
 const WasteTypeSelection = () => {
-  const [wasteTypes, setWasteTypes] = useState([]); // List of available waste types
   const [selectedWasteTypes, setSelectedWasteTypes] = useState([]); // Array of selected waste types
   const navigate = useNavigate();
-
-  // Fetch waste types from the backend when the page loads
-  useEffect(() => {
-    const fetchWasteTypes = async () => {
-      try {
-        const response = await cleanWasteAPI.get('/waste/waste-types');
-        setWasteTypes(response.data);
-      } catch (error) {
-        console.error('Error fetching waste types:', error);
-      }
-    };
-    fetchWasteTypes();
-  }, []);
 
   // Toggle waste type selection
   const handleWasteTypeSelection = (wasteType) => {

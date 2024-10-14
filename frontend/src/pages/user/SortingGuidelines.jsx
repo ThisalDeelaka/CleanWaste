@@ -1,33 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // For receiving state and navigation
-import cleanWasteAPI from '../../api/cleanWasteAPI';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom'; 
 import Navbar from '../../components/Navbar'; 
 import Footer from '../../components/Footer';
 import Button from '../../components/Button'; 
 
+const guidelinesData = {
+  'Organic Waste': [
+    'Separate organic waste from recyclables.',
+    'Do not mix with hazardous or electronic waste.',
+    'Compost organic waste if possible.'
+  ],
+  'Paper Waste': [
+    'Make sure the paper is clean and dry.',
+    'Remove any non-paper materials like plastic or staples.',
+    'Recyclable paper includes newspapers, magazines, and office paper.'
+  ],
+  'E-waste': [
+    'Dispose of e-waste at designated recycling centers.',
+    'Do not throw electronic devices into regular bins.',
+    'Ensure data is wiped from devices before disposal.'
+  ],
+  'Hazardous Waste': [
+    'Handle hazardous waste with care and use protective gear.',
+    'Dispose of hazardous waste at specialized centers.',
+    'Do not mix hazardous waste with regular waste.'
+  ],
+  'Plastic Waste': [
+    'Separate plastics by type (e.g., PET, HDPE).',
+    'Remove any labels or caps from bottles.',
+    'Rinse plastics before recycling.'
+  ],
+  'Recycle Waste': [
+    'Separate materials based on their recyclability.',
+    'Clean all materials before placing them in the bin.',
+    'Do not include contaminated or non-recyclable items.'
+  ]
+};
+
 const SortingGuidelines = () => {
   const location = useLocation();
-  const { selectedWasteTypes } = location.state; // Get selected waste types from navigation state
-  const [currentWasteIndex, setCurrentWasteIndex] = useState(0); // Track which waste type to display
-  const [sortingGuidelines, setSortingGuidelines] = useState(null); // Current sorting guidelines
-  const [loading, setLoading] = useState(false);
+  const { selectedWasteTypes } = location.state; 
+  const [currentWasteIndex, setCurrentWasteIndex] = useState(0);
   const navigate = useNavigate();
 
-  // Fetch guidelines for the current waste type
-  useEffect(() => {
-    const fetchSortingGuidelines = async () => {
-      setLoading(true);
-      try {
-        const response = await cleanWasteAPI.get(`/waste/guidelines/${selectedWasteTypes[currentWasteIndex]}`);
-        setSortingGuidelines(response.data.guidelines || []);
-      } catch (error) {
-        console.error('Error fetching sorting guidelines:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSortingGuidelines();
-  }, [currentWasteIndex, selectedWasteTypes]);
+  const currentWasteType = selectedWasteTypes[currentWasteIndex];
+  const sortingGuidelines = guidelinesData[currentWasteType] || [];
 
   // Handle "Next" button
   const handleNext = () => {
@@ -35,7 +52,7 @@ const SortingGuidelines = () => {
       setCurrentWasteIndex(currentWasteIndex + 1);
     } else {
       alert('You have reviewed all the guidelines.');
-      navigate('/'); // Redirect to the home page or another final page
+      navigate('/'); 
     }
   };
 
@@ -54,43 +71,31 @@ const SortingGuidelines = () => {
         {/* Step Indicator */}
         <div className="w-full max-w-lg sm:max-w-xl mb-4">
           <div className="relative w-full h-2 bg-gray-300 rounded-full">
-            <div className="absolute top-0 left-0 h-full bg-[#175E5E] transition-all duration-300" 
+            <div className="absolute top-0 left-0 h-full bg-[#175E5E]" 
                  style={{ width: `${((currentWasteIndex + 1) / selectedWasteTypes.length) * 100}%` }}></div>
           </div>
           <p className="text-sm text-[#175E5E] text-center mt-2">Step 2 of 2: Sorting Guidelines</p>
         </div>
 
         <h1 className="text-4xl font-bold text-[#175E5E] mb-6 text-center leading-snug">
-          Sorting Guidelines for {selectedWasteTypes[currentWasteIndex]}
+          Sorting Guidelines for {currentWasteType}
         </h1>
 
-        {/* Loader */}
-        {loading && (
-          <div className="flex justify-center items-center">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-green-500"></div>
-            <span className="ml-3 text-gray-700 text-lg">Loading guidelines...</span>
-          </div>
-        )}
-
         {/* Display Sorting Guidelines */}
-        {!loading && sortingGuidelines && (
-          <div className="mt-8 bg-gray-200 p-6 rounded-lg shadow-lg w-full max-w-2xl">
-            <ul className="list-disc pl-5 text-gray-700 space-y-3 text-lg">
-              {sortingGuidelines.map((guideline, index) => (
-                <li key={index}>{guideline}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div className="mt-8 bg-gray-200 p-6 rounded-lg shadow-lg w-full max-w-2xl">
+          <ul className="list-disc pl-5 text-gray-700 space-y-3 text-lg">
+            {sortingGuidelines.map((guideline, index) => (
+              <li key={index}>{guideline}</li>
+            ))}
+          </ul>
+        </div>
 
         {/* Navigation Buttons */}
         <div className="mt-8 flex space-x-4">
           <Button
             text="Back"
             onClick={handleBack}
-            className={`px-6 sm:px-8 py-3 sm:py-4 bg-gray-400 text-white font-semibold rounded-full shadow-lg hover:bg-gray-500 transition duration-300 ease-in-out ${
-              currentWasteIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`px-6 sm:px-8 py-3 sm:py-4 bg-gray-400 text-white font-semibold rounded-full shadow-lg hover:bg-gray-500 transition duration-300 ease-in-out ${currentWasteIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={currentWasteIndex === 0}
           />
           <Button
