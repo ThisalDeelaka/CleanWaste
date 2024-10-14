@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import cleanWasteAPI from "../../api/cleanWasteAPI";
 import MapComponent from "../../components/MapComponent"; // Import the MapComponent
 import Navbar from "../../components/DriverNavbar"; // Import Navbar
 import Footer from "../../components/Footer"; // Import Footer
+import { FaCheckCircle, FaTasks } from "react-icons/fa"; // Import icons
+import { Menu, Dropdown, Button } from "antd"; // Using Ant Design dropdown
 
 const PickupRequests = () => {
   const [searchParams] = useSearchParams();
   const [wasteRequests, setWasteRequests] = useState([]);
+  const [driverTasks, setDriverTasks] = useState([]); // Store the driver's tasks
   const [pickedUpRequestId, setPickedUpRequestId] = useState(null); // Store the ID of the picked-up request
   const [wasteIdInput, setWasteIdInput] = useState(""); // Store the Waste ID entered by the driver
   const [expandedRequestId, setExpandedRequestId] = useState(null); // Store the ID of the request whose location map is expanded
@@ -25,9 +28,22 @@ const PickupRequests = () => {
       }
     };
 
+    const fetchDriverTasks = async () => {
+      try {
+        // Fetch all tasks for the driver
+        const response = await cleanWasteAPI.get(`/drivers/assigned-pickups`);
+        setDriverTasks(response.data || []);
+      } catch (error) {
+        console.error("Error fetching driver tasks:", error);
+      }
+    };
+
     if (street) {
       fetchWasteRequests();
     }
+
+    // Fetch the tasks when the component mounts
+    fetchDriverTasks();
   }, [street]);
 
   // Handle "Picked Up" button click
@@ -44,13 +60,10 @@ const PickupRequests = () => {
 
     try {
       // Call the API to confirm pickup
-      const response = await cleanWasteAPI.post(
-        `/waste-requests/mark-picked-up`,
-        {
-          requestId,
-          wasteId: wasteIdInput,
-        }
-      );
+      const response = await cleanWasteAPI.post(`/drivers/mark-picked-up`, {
+        requestId,
+        wasteId: wasteIdInput,
+      });
 
       if (response.status === 200) {
         alert("Pickup confirmed successfully!");
@@ -90,10 +103,40 @@ const PickupRequests = () => {
     setExpandedRequestId(expandedRequestId === requestId ? null : requestId); // Toggle map display
   };
 
+  // Dropdown menu content for tasks
+  const taskMenu = (
+    <Menu>
+      {driverTasks.length > 0 ? (
+        driverTasks.map((task) => (
+          <Menu.Item key={task._id}>
+            <Link to={`/pickup-requests?street=${task.assignedStreet}`}>
+              {task.assignedStreet} -{" "}
+              {new Date(task.assignmentDate).toLocaleDateString()}
+            </Link>
+          </Menu.Item>
+        ))
+      ) : (
+        <Menu.Item>
+          <span>No tasks assigned.</span>
+        </Menu.Item>
+      )}
+    </Menu>
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
       <Navbar />
+
+      {/* Dropdown for Driver Tasks */}
+      <div className="flex justify-end pr-8 pt-4">
+        <Dropdown overlay={taskMenu} trigger={["click"]}>
+          <Button className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold">
+            <FaTasks className="mr-2" />
+            View My Tasks
+          </Button>
+        </Dropdown>
+      </div>
 
       {/* Main Content */}
       <div className="flex-grow bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
@@ -128,25 +171,36 @@ const PickupRequests = () => {
                       </p>
                     </div>
 
-                    <div className="flex space-x-2 w-full md:w-auto justify-end">
-                      {/* View Location Button */}
-                      <button
-                        className="w-full md:w-auto px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition duration-200"
-                        onClick={() => toggleMap(request._id)}
-                      >
-                        {expandedRequestId === request._id
-                          ? "Hide Location"
-                          : "View Location"}
-                      </button>
+                    <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 w-full md:w-auto justify-end">
+                      {/* If status is not "picked-up", show buttons */}
+                      {request.status !== "picked-up" ? (
+                        <>
+                          {/* View Location Button */}
+                          <button
+                            className="w-full md:w-auto px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition duration-200"
+                            onClick={() => toggleMap(request._id)}
+                          >
+                            {expandedRequestId === request._id
+                              ? "Hide Location"
+                              : "View Location"}
+                          </button>
 
-                      {/* Picked Up Button */}
-                      {request.status !== "picked-up" && (
-                        <button
-                          className="w-full md:w-auto px-4 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-200"
-                          onClick={() => handlePickedUpClick(request._id)}
-                        >
-                          Picked Up
-                        </button>
+                          {/* Picked Up Button */}
+                          <button
+                            className="w-full md:w-auto px-4 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-200"
+                            onClick={() => handlePickedUpClick(request._id)}
+                          >
+                            Picked Up
+                          </button>
+                        </>
+                      ) : (
+                        // If status is "picked-up", show completion message and icon
+                        <div className="flex items-center space-x-2 text-green-600">
+                          <FaCheckCircle size={20} />
+                          <span className="font-semibold">
+                            Waste Pickup Completed
+                          </span>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -171,7 +225,7 @@ const PickupRequests = () => {
                         value={wasteIdInput}
                         onChange={(e) => setWasteIdInput(e.target.value)}
                       />
-                      <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                      <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
                         <button
                           className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200"
                           onClick={() => handleConfirmPickup(request._id)}
