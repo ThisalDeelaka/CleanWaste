@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import cleanWasteAPI from '../../api/cleanWasteAPI';
 import Navbar from '../../components/Navbar'; 
 import Footer from '../../components/Footer';
 import Button from '../../components/Button'; 
 import Map from '../../components/Map'; 
-import { useAuth } from '../../context/AuthContext';
 
 const CreateWasteRequest = () => {
   const location = useLocation();
   const { selectedWasteTypes } = location.state || {};  // Safely destructure selectedWasteTypes
   const [pickupLocation, setPickupLocation] = useState(null); // Pickup location (latitude, longitude)
-  const { auth } = useAuth(); // Get the authenticated user
+  const [userId, setUserId] = useState(null); // Store the user ID from local storage
   const navigate = useNavigate();
+
+  // Retrieve user ID from local storage on component mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserId(user._id);
+    }
+  }, []);
 
   // Handle creating the waste request
   const handleCreateRequest = async () => {
@@ -25,7 +33,7 @@ const CreateWasteRequest = () => {
       const response = await cleanWasteAPI.post('/waste-requests/create', {
         wasteType: selectedWasteTypes, 
         location: pickupLocation,
-        userId: auth.user._id, // User ID from the authenticated user
+        userId, // Use the user ID from local storage
       });
       console.log('Waste request created:', response.data);
       alert('Waste request created successfully!');
