@@ -37,11 +37,12 @@ const CreateWasteRequest = () => {
       });
       console.log('Waste request created:', response.data);
       alert('Waste request created successfully!');
-      navigate('/');  // Redirect user to home after successful request
+      navigate('/');
     } catch (error) {
-      console.error('Error creating waste request:', error);
+      console.error('Error creating waste request:', error.response?.data || error.message);
       alert('Failed to create waste request. Please try again.');
     }
+    
   };
 
   // Fallback if no selectedWasteTypes are passed
