@@ -6,8 +6,12 @@ const eventSchema = new Schema({
     EventDescription: { type: String, required: true },
     EventDate: { type: Date, required: true },
     EventTime: { type: String, required: true },
-    eventLocation:{ type: String, required: true },
-    setby: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+    eventLocation:{ 
+        latitude: { type: Number, required: true },
+        longitude: { type: Number, required: true },
+     },
+    setby: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    eventUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     }, { timestamps: true });
 
 module.exports = mongoose.model('Event', eventSchema);

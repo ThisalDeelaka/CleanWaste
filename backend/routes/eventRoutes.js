@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const eventController = require('../controllers/eventController');
 
-// Create a event (user-specific)
 router.post('/createEvent', eventController.createEvent);
-
-// get user events
-router.get('/getEvents', eventController.getEvents);
+router.get('/getEvents', eventController.getEventsbyUser);
+router.get('/getEventbyId/:eventId', eventController.getEventbyId);
+router.get('/getAllUsers', eventController.getAllUsers);
+router.get('/getUsersbyId', eventController.getUsersbyId);
 
 module.exports = router;

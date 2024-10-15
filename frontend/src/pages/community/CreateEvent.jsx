@@ -6,13 +6,15 @@ import Button from '../../components/Button';
 import cleanWasteAPI from '../../api/cleanWasteAPI';
 import Map from '../../components/eventMap';
 import { useAuth } from "../../context/AuthContext";
+import Navbar from '../../components/Navbar';
 
 export default function CreateEvent() {
   const [eventLocation,setEventLocation] = useState(null);
-  const [loading,setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [users, setUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const navigate = useNavigate();
   const { auth } = useAuth();
-  console.log(auth);
 
   const [formData, setFormData] = useState({
     Eventname: '',
@@ -20,10 +22,9 @@ export default function CreateEvent() {
     EventDate: '',
     EventTime: '',
     eventLocation,
+    eventUsers: [],
   });
-
-
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -44,6 +45,31 @@ export default function CreateEvent() {
     }
   };
 
+  useEffect(() => {
+    if (searchTerm) {
+      const fetchUsers = async () => {
+        try {
+          const response = await cleanWasteAPI.get(`/event/getAllUsers?query=${searchTerm}`, {id:auth.user._id} );
+          setUsers(response.data);
+        } catch (error) {
+          console.error('Failed to fetch users', error);
+        }
+      };
+      fetchUsers();
+    }
+  }, [searchTerm]);
+
+
+  const handleUserSelection = (user) => {
+    if (!selectedUsers.includes(user)) {
+      setSelectedUsers([...selectedUsers, user]);
+    }
+  };
+
+  const handleRemoveSelectedUser = (user) => {
+    setSelectedUsers(selectedUsers.filter((u) => u._id !== user._id));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,8 +77,25 @@ export default function CreateEvent() {
     const { Eventname,EventDescription,EventTime,EventDate } = formData;
     if ( !Eventname || !EventDescription || !EventTime || !EventDate || !eventLocation) {
       alert('Please fill out all fields.');
-      console.log(formData);
       return;
+    }
+    if(formData){
+      // Date and Time validation
+      if(EventDate){
+        const today = new Date();
+        const date = new Date(EventDate);
+        if(date < today){
+          alert('Please select a valid date.');
+          return;
+        }
+      }
+      if(EventTime){
+        const time = EventTime.split(':');
+        if(time[0] > 24 || time[1] > 60){
+          alert('Please select a valid time.');
+          return;
+        }
+      }
     }
 
     try {
@@ -61,8 +104,8 @@ export default function CreateEvent() {
         ...formData,
         eventLocation ,
         setby: auth.user._id,
+        eventUsers: selectedUsers.map(user => user._id),
       });
-      console.log(formData);
 
       console.log('Create Event Response:', response.data);
 
@@ -81,7 +124,9 @@ export default function CreateEvent() {
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-[#175E5E]'>
+    <div>
+      <Navbar />
+    <div className='flex items-center justify-center min-h-screen bg-[#175E5E] pt-5'>
       {auth ? (
         <div className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md mx-4'>
           <h1 className="text-3xl font-bold text-center text-[#175E5E] mb-6">Event Creation</h1>
@@ -126,6 +171,45 @@ export default function CreateEvent() {
             <div className="w-full max-w-4xl mx-auto mb-4">
               <Map onLocationSelect={setEventLocation} />
             </div>
+
+            {/* User Search Input */}
+            <div className="my-4">
+              <label className="block text-gray-700">Search Users to Invite:</label>
+              <input
+                type="text"
+                className="w-full border border-gray-300 p-2 rounded-md"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search for users..."
+              />
+              {users.length > 0 && (
+                <div className="bg-white border border-gray-300 mt-2 p-2 rounded-md">
+                  <ul>
+                    {users.map(user => (
+                      <li key={user._id} className="cursor-pointer hover:bg-gray-200 p-1" onClick={() => handleUserSelection(user)}>
+                        {user.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Display Selected Users */}
+            {selectedUsers.length > 0 && (
+              <div className="my-4">
+                <h3 className="text-lg font-semibold">Selected Users:</h3>
+                <ul className="list-disc pl-5">
+                  {selectedUsers.map(user => (
+                    <li key={user._id} className="flex justify-between items-center">
+                      {user.name}
+                      <button type="button" onClick={() => handleRemoveSelectedUser(user)} className="text-red-500">Remove</button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <Button
               text="Create Event"
               type="submit"
@@ -143,5 +227,7 @@ export default function CreateEvent() {
         <div>Please relogin</div>
       )}
     </div>
+    </div>
   )
 }
+

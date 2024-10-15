@@ -5,6 +5,7 @@ import HomePage from "../pages/user/HomePage";
 import DriverHome from "../pages/driver/driverHomePage";
 import CommunityPage from "../pages/community/CommunityPage";
 import CreateEvent from "../pages/community/CreateEvent";
+import EventScreen from "../pages/community/EventScreen";
 import WasteTypeSelection from "../pages/user/WasteTypeSelection";
 import SortingGuidelines from "../pages/user/SortingGuidelines";
 import CreateWasteRequest from '../pages/user/CreateWasteRequest';
@@ -32,6 +33,7 @@ const AppRouter = () => (
       <Route path="/" element={<HomePage />} />
       <Route path="/Community" element={<CommunityPage/>}/>
       <Route path="/CreateEvent" element={<CreateEvent/>}/>
+      <Route path="/EventScreen/:eventId" element={<EventScreen/>}/>
       <Route path="/selection" element={<WasteTypeSelection />} />
       <Route path="/sorting-guidelines" element={<SortingGuidelines />} />
       <Route path="/create-waste-request" element={<CreateWasteRequest />} />
