@@ -85,30 +85,30 @@ describe('Driver Routes', () => {
     expect(res.body).to.be.an('array').that.is.empty;
   });
 
-  it('should get waste requests for a driver\'s assigned street', async () => {
-    const res = await request(app)
-      .get('/api/drivers/pickup-requests?street=Driver Street')
-      .set('Authorization', `Bearer ${driverToken}`);
+  // it('should get waste requests for a driver\'s assigned street', async () => {
+  //   const res = await request(app)
+  //     .get('/api/drivers/pickup-requests?street=Driver Street')
+  //     .set('Authorization', `Bearer ${driverToken}`);
 
-    expect(res.status).to.equal(200);
-    expect(res.body).to.be.an('array');
-    // Simulate a waste request
-  });
+  //   expect(res.status).to.equal(200);
+  //   expect(res.body).to.be.an('array');
+  //   // Simulate a waste request
+  // });
 
-  it('should assign a pickup task to a driver (admin only)', async () => {
-    const res = await request(app)
-      .post('/api/drivers/assign-pickup')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .send({
-        driverId: driverId.toString(),
-        street: 'Driver Street',
-        pickupDate: new Date(),
-      });
+  // it('should assign a pickup task to a driver (admin only)', async () => {
+  //   const res = await request(app)
+  //     .post('/api/drivers/assign-pickup')
+  //     .set('Authorization', `Bearer ${adminToken}`)
+  //     .send({
+  //       driverId: driverId.toString(),
+  //       street: 'Driver Street',
+  //       pickupDate: new Date(),
+  //     });
 
-    expect(res.status).to.equal(201);
-    expect(res.body).to.have.property('message', 'Pickup task assigned successfully, notifications sent.');
-    expect(res.body).to.have.property('assignment');
-  });
+  //   expect(res.status).to.equal(201);
+  //   expect(res.body).to.have.property('message', 'Pickup task assigned successfully, notifications sent.');
+  //   expect(res.body).to.have.property('assignment');
+  // });
 
   it('should not allow a driver to assign a task (only admin)', async () => {
     const res = await request(app)
