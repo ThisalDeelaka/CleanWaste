@@ -41,6 +41,9 @@ describe('User Registration API', () => {
         role: 'user'  // Register as a normal user
       })
       .end((err, res) => {
+        if (err) {
+          console.log('Response Body:', res.body);  // Log the response body to inspect the error
+        }
         expect(res).to.have.status(201);  // Expect a 201 status (created)
         expect(res.body).to.be.an('object');  // Expect response to be an object
         expect(res.body.user).to.have.property('name', 'John Doe');  // Check the user name

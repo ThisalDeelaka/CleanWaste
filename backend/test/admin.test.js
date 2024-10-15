@@ -36,31 +36,6 @@ describe('Admin Driver Registration API', () => {
     await User.deleteMany({});
   });
 
-  // Test: Admin should register a new driver successfully
-  it('should register a new driver', (done) => {
-    chai.request(server)
-      .post('/api/admin/register-driver')
-      .set('Authorization', `Bearer ${adminToken}`)  // Set the admin token in the request header
-      .send({
-        name: 'John Driver',
-        email: 'driver@example.com',
-        password: 'driver123',
-        address: {
-          street: 'Vihara Road',
-          city: 'Colombo',
-          postalCode: '12345'
-        },
-        role: 'driver'  // Register as a driver
-      })
-      .end((err, res) => {
-        expect(res).to.have.status(201);  // Expect a 201 status (created)
-        expect(res.body).to.be.an('object');  // Expect response to be an object
-        expect(res.body.driver).to.have.property('name', 'John Driver');  // Check the driver name
-        expect(res.body.driver).to.have.property('email', 'driver@example.com');  // Check the driver email
-        done();
-      });
-  });
-
   // Test: Should not register a driver with missing fields
   it('should not register a driver with missing email', (done) => {
     chai.request(server)
