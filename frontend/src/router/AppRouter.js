@@ -21,7 +21,8 @@ import BulkWaste from "../pages/user/BulkWaste";
 import CommunityPage from "../pages/community/CommunityPage";
 import CreateEvent from "../pages/community/CreateEvent";
 import AddPlaceForm from "../pages/admin/AddPlaceForm";
-import PlaceList from "../pages/admin/PlaceList";
+import PlaceList from "../pages/driver/PlaceList";
+import AdminRecycleDashboard from "../pages/admin/AdminRecycleIntegration";
 
 // import Dashboard from '../pages/Dashboard';
 
@@ -57,6 +58,7 @@ const AppRouter = () => (
       <Route path="/driverNotifications" element={<DriverNotification />} />
 
       <Route path="/pickup-requests" element={<PickupRequests />} />
+      <Route path="/AdminRecycleIntegration" element={<AdminRecycleDashboard />} />
 
       {/* community routes */}
       <Route path="/Community" element={<CommunityPage />} />

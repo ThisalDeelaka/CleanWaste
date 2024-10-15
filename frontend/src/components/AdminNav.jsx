@@ -49,10 +49,10 @@ const AdminNav = () => {
               Place Management 
             </Link>
             <Link
-              to="/contact"
+              to="/AdminRecycleIntegration"
               className="px-3 py-2 rounded-md text-sm font-medium hover:text-yellow-400 hover:underline hover:underline-offset-4 transition-all duration-200"
             >
-              Contact
+              Recycle Management
             </Link>
 
             {/* Conditionally show Login/Sign Up or Logout based on auth.user */}

@@ -1,7 +1,7 @@
 // src/components/PlaceList.js
 import React, { useEffect, useState } from 'react';
 import cleanWasteAPI from '../../api/cleanWasteAPI';  // Import the axios instance
-import Navbar from '../../components/Navbar';  // Import Navbar
+import DriverNavbar from '../../components/DriverNavbar';  // Import Navbar
 import Footer from '../../components/Footer';  // Import Footer
 
 const PlaceList = () => {
@@ -44,7 +44,7 @@ const PlaceList = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar /> {/* Navbar at the top */}
+      <DriverNavbar /> {/* Navbar at the top */}
 
       <main className="flex-grow bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6 sm:p-8">
