@@ -1,98 +1,113 @@
-import * as chai from 'chai';  // Import everything from chai as a named import
-import chaiHttp from 'chai-http';
-import { describe, it, before, after } from 'mocha';
+import request from 'supertest';
 import mongoose from 'mongoose';
-import server from '../server.js';  // Ensure this points to your server file
-import User from '../models/User.js';  // Import the User model
+import { expect } from 'chai';
+import app from '../app.js';
+import User from '../models/User.js';
 
-const { expect } = chai;
+// Clear database after each test
+beforeEach(async () => {
+  await User.deleteMany({});
+});
 
-process.env.NODE_ENV = 'test';
-import dotenv from 'dotenv';
-dotenv.config();  // Load the .env.test file
+// Close database connection after all tests
+after(async () => {
+  await mongoose.connection.close();
+});
 
-chai.use(chaiHttp);
-
-describe('User Registration API', () => {
-  
-  // Before all tests, ensure the database is clean
-  before(async () => {
-    await User.deleteMany({}); // Clear the User collection
-  });
-
-  // After all tests, drop the database (optional)
-  after(async () => {
-    await User.deleteMany({});
-  });
-
-  // Test: Should register a new user successfully
-  it('should register a new user', (done) => {
-    chai.request(server)
-      .post('/users/register')  // The registration endpoint
+describe('User Routes', () => {
+  it('should register a new user', async () => {
+    const res = await request(app)
+      .post('/api/users/register')
       .send({
         name: 'John Doe',
         email: 'john@example.com',
         password: 'password123',
+        role: 'user',
         address: {
-          street: 'Vihara Road',
+          street: '123 Main St',
           city: 'Colombo',
-          postalCode: '12345'
+          postalCode: '00100',
         },
-        role: 'user'  // Register as a normal user
-      })
-      .end((err, res) => {
-        if (err) {
-          console.log('Response Body:', res.body);  // Log the response body to inspect the error
-        }
-        expect(res).to.have.status(201);  // Expect a 201 status (created)
-        expect(res.body).to.be.an('object');  // Expect response to be an object
-        expect(res.body.user).to.have.property('name', 'John Doe');  // Check the user name
-        expect(res.body.user).to.have.property('email', 'john@example.com');  // Check the user email
-        done();  // Done callback to signal the end of the test
       });
+
+    expect(res.status).to.equal(201);
+    expect(res.body).to.have.property('user');
+    expect(res.body.user.email).to.equal('john@example.com');
   });
 
-  // Test: Should not register a user with missing fields
-  it('should not register a user with missing email', (done) => {
-    chai.request(server)
-      .post('/users/register')
+  it('should not register a user with an existing email', async () => {
+    // Create a user
+    await request(app)
+      .post('/api/users/register')
       .send({
         name: 'Jane Doe',
-        email: '',  // Missing email
+        email: 'jane@example.com',
         password: 'password123',
+        role: 'user',
         address: {
-          street: 'Waliwita Road',
+          street: '123 Main St',
           city: 'Colombo',
-          postalCode: '12345'
+          postalCode: '00100',
         },
-        role: 'user'
-      })
-      .end((err, res) => {
-        expect(res).to.have.status(400);  // Expect a 400 status for bad request
-        expect(res.body).to.have.property('message');  // Expect an error message
-        done();
       });
+
+    // Try to register with the same email
+    const res = await request(app)
+      .post('/api/users/register')
+      .send({
+        name: 'John Doe',
+        email: 'jane@example.com', // Duplicate email
+        password: 'password123',
+        role: 'user',
+        address: {
+          street: '123 Main St',
+          city: 'Colombo',
+          postalCode: '00100',
+        },
+      });
+
+    expect(res.status).to.equal(400);
+    expect(res.body).to.have.property('message');
   });
 
-  // Test: Should not register a user with duplicate email
-  it('should not register a user with duplicate email', (done) => {
-    chai.request(server)
-      .post('/users/register')
+  it('should login a user', async () => {
+    // First register a user
+    await request(app)
+      .post('/api/users/register')
       .send({
-        name: 'Duplicate User',
-        email: 'john@example.com',  // Duplicate email from the previous test
+        name: 'John Doe',
+        email: 'john@example.com',
         password: 'password123',
+        role: 'user',
         address: {
-          street: 'E.A. Jayasinghe Road',
+          street: '123 Main St',
           city: 'Colombo',
-          postalCode: '12345'
+          postalCode: '00100',
         },
-        role: 'user'
-      })
-      .end((err, res) => {
-        expect(res).to.have.status(400);  // Expect a 400 status for duplicate error
-        expect(res.body).to.have.property('message').that.includes('duplicate key error');  // Error for duplicate
-        done();
       });
+
+    // Attempt to login
+    const res = await request(app)
+      .post('/api/users/login')
+      .send({
+        email: 'john@example.com',
+        password: 'password123',
+      });
+
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property('token');
+    expect(res.body.user.email).to.equal('john@example.com');
+  });
+
+  it('should fail login with incorrect credentials', async () => {
+    const res = await request(app)
+      .post('/api/users/login')
+      .send({
+        email: 'nonexistent@example.com',
+        password: 'wrongpassword',
+      });
+
+    expect(res.status).to.equal(401);
+    expect(res.body).to.have.property('message');
   });
 });
