@@ -57,6 +57,11 @@ const UserLogin = () => {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
+  // Function to auto-fill login details for a specific user
+  const autoFillCredentials = (email, password) => {
+    setFormData({ email, password });
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#175E5E]">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md mx-4">
@@ -91,6 +96,29 @@ const UserLogin = () => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+
+          {/* Buttons to auto-fill user credentials with unique colors */}
+          <div className="flex flex-col space-y-2">
+            <Button
+              text="Login as User"
+              type="button"
+              onClick={() => autoFillCredentials("nawa@gmail.com", "nawa")}
+              className="bg-blue-200 text-blue-800 w-full py-2 rounded-md font-semibold hover:bg-blue-300 transition duration-200"
+            />
+            <Button
+              text="Login as Admin"
+              type="button"
+              onClick={() => autoFillCredentials("admin@gmail.com", "admin")}
+              className="bg-green-200 text-green-800 w-full py-2 rounded-md font-semibold hover:bg-green-300 transition duration-200"
+            />
+            <Button
+              text="Login as Driver"
+              type="button"
+              onClick={() => autoFillCredentials("udara@gmail.com", "udara")}
+              className="bg-purple-200 text-purple-800 w-full py-2 rounded-md font-semibold hover:bg-purple-300 transition duration-200"
+            />
+          </div>
+
           <Button
             text="Login"
             type="submit"
