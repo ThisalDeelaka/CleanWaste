@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const cleanWasteAPI = axios.create({
-  baseURL: 'https://cleanwaste-backend.onrender.com/api',  // Replace with the backend's base URL
+  // baseURL: 'https://cleanwaste-backend.onrender.com/api', 
+  baseURL: 'http://localhost:5000/api',
 });
 
 cleanWasteAPI.interceptors.request.use(

@@ -92,6 +92,8 @@ const UserLogin = () => {
               type="button"
               onClick={togglePasswordVisibility}
               className="absolute right-3 top-10 text-gray-500"
+              data-testid="toggle-password"
+
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
